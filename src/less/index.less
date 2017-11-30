@@ -1,0 +1,58 @@
+/**
+颜色变量见文件:
+https://github.com/rsuite/rsuite-theme/blob/next/src/less/commonly-variables.less
+注意：不要在自己的组件中声明颜色变量
+**/
+
+@import '~rsuite-theme/dist/less/commonly-variables';
+
+@import (optional) "~rsuite-theme/dist/less/commonly-variables";
+@import (optional) "rsuite-theme/dist/less/commonly-variables";
+
+.float-nav {
+  position: fixed;
+}
+
+.sub-nav-item {
+
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  display: block;
+  text-decoration: none;
+  color: @H500;
+  font-size: 14px;
+  position: relative;
+  padding-left: 20px;
+  box-sizing: border-box;
+  height: 21px;
+  line-height: 21px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 3px;
+    height: 100%;
+    top: 0;
+    background: @H100;
+  }
+  &.scroll-bar-left::before {
+    left: 0;
+  }
+  &.scroll-bar-right::before {
+    right: 0;
+  }
+  &.active {
+    background-color: @H050;
+    &::before {
+      background: @H500;
+    }
+  }
+}
