@@ -5,9 +5,9 @@
  *    3. 不管是 15 以前的 PureRenderMixin 还是 15 以后的 PureComponent，都只比较 props 和 state，
  *       不比较 context，导致 context 更新时组件不更新
  * @example shouldComponentUpdate = pureUpdate.bind(this);
- * @param { Array } nextProps 
- * @param { Array } nextState 
- * @param { Array } nextContext 
+ * @param { [Array] } nextProps 
+ * @param { [Array] } nextState 
+ * @param { [Array] } nextContext 
  */
 function pureUpdate(nextProps, nextState, nextContext) {
   for (let key in nextProps) {

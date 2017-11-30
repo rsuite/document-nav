@@ -2,6 +2,10 @@
 
 简单易用的文章导航组件
 
+[![npm](https://img.shields.io/npm/v/rsuite-page-nav.svg)](https://www.npmjs.com/package/rsuite-page-nav)
+
+[![Coverage Status](https://coveralls.io/repos/github/rsuite/rsuite-page-nav/badge.svg?branch=master)](https://coveralls.io/github/rsuite/rsuite-page-nav?branch=master)
+
 ## 示例
 
 👈 左边那个就是
