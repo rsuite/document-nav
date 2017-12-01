@@ -1,0 +1,22 @@
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+import pureUpdate from '../util/pure';
+
+class PageContent extends Component {
+  static contextTypes = {
+    setContent: PropTypes.func
+  }
+  shouldComponentUpdate = pureUpdate.bind(this);
+  render() {
+    const { children } = this.props;
+    const { setContent } = this.context;
+    return (
+      <div ref={ref => setContent(ref)}>
+        { children }
+      </div>
+    );
+  }
+}
+
+export default PageContent;

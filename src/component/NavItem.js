@@ -4,7 +4,7 @@ import createNavItems from '../util/createNavItems';
 import pureUpdate from '../util/pure';
 
 
-const BASE_PADDING_LEFT = 20;
+const BASE_PADDING_LEFT = 15;
 
 class NavItem extends Component {
   static propTypes = {
@@ -20,7 +20,8 @@ class NavItem extends Component {
   }
   static contextTypes = {
     scrollBar: PropTypes.oneOf(['left', 'right']),
-    activeAnchor: PropTypes.string
+    activeAnchor: PropTypes.string,
+    showOrderNumber: PropTypes.bool
   }
   constructor(props) {
     super(props);
@@ -43,7 +44,7 @@ class NavItem extends Component {
   }
   render() {
     const { title, anchor, subItems, children, index, level } = this.props;
-    const { scrollBar = 'right', activeAnchor } = this.context;
+    const { scrollBar = 'right', activeAnchor, showOrderNumber } = this.context;
     const active = anchor === activeAnchor;
     return (
       <div
@@ -56,7 +57,7 @@ class NavItem extends Component {
             paddingLeft: `${(level - 1) * 20 + BASE_PADDING_LEFT}px`
           }}
         >
-          {`${index} ${title}`}
+          { showOrderNumber ? `${index} ${title}` : title}
         </a>
         {
         subItems || children ?

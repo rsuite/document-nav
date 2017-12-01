@@ -9,12 +9,10 @@ https://github.com/rsuite/rsuite-theme/blob/next/src/less/commonly-variables.les
 @import (optional) "~rsuite-theme/dist/less/commonly-variables";
 @import (optional) "rsuite-theme/dist/less/commonly-variables";
 
-.float-nav {
-  position: fixed;
+.page-nav {
 }
 
 .sub-nav-item {
-
 }
 
 .nav-item {
@@ -24,13 +22,14 @@ https://github.com/rsuite/rsuite-theme/blob/next/src/less/commonly-variables.les
 .nav-link {
   display: block;
   text-decoration: none;
-  color: @H500;
-  font-size: 14px;
+  color: @B900;
+  font-size: 12px;
   position: relative;
+  padding: 8px 0;
   padding-left: 20px;
   box-sizing: border-box;
-  height: 21px;
-  line-height: 21px;
+  height: 34px;
+  line-height: 18px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -38,10 +37,13 @@ https://github.com/rsuite/rsuite-theme/blob/next/src/less/commonly-variables.les
     content: '';
     display: block;
     position: absolute;
-    width: 3px;
+    width: 1px;
     height: 100%;
     top: 0;
-    background: @H100;
+    background: @B200;
+  }
+  &:hover {
+    text-decoration: none;
   }
   &.scroll-bar-left::before {
     left: 0;
@@ -50,8 +52,9 @@ https://github.com/rsuite/rsuite-theme/blob/next/src/less/commonly-variables.les
     right: 0;
   }
   &.active {
-    background-color: @H050;
+    color: @H500;
     &::before {
+      width: 2px;
       background: @H500;
     }
   }

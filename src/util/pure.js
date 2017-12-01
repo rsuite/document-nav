@@ -32,7 +32,7 @@ export function equal(a, b) {
   if (a === b) {
     return true;
   }
-  if (typeof a === 'object' && Object.keys(a).length === 0 && Object.keys(b).length === 0) {
+  if (typeof a === 'object' && a && b && Object.keys(a).length === 0 && Object.keys(b).length === 0) {
     return true;
   }
   return false;

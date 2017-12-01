@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Markdown } from 'markdownloader';
 import { Header, Navbar, Nav, Row, Col } from 'rsuite';
-import PageNav from '../src';
+import { PageProvider, PageContent, PageNav} from '../src';
 import './less/index.less';
-import '../src/less/index.less';
-
-const { NavItem } = PageNav;
+// import '../src/less/index.less';
 
 class App extends Component {
   renderContent() {
@@ -49,30 +47,23 @@ class App extends Component {
         </Header>
 
         <div className="container">
+        <PageProvider>
           <Row>
             <Col md={2} xsHidden smHidden>
-              
+              <PageNav
+                width={150}
+                showOrderNumber={false}
+                // fixed={false}
+              />
             </Col>
             <Col md={10}>
-              <PageNav
-                content={this.renderContent()}
-                offset={{
-                  top: 100,
-                  left: 30
-                }}
-                width={150}
-                startLevel={2}
-                scrollBar="right"
-              >
-                {/* <NavItem anchor="examples" title="示例" />
-                <NavItem anchor="relation" title="DEMO" />
-                <NavItem anchor="API" title="API" >
-                  <NavItem anchor="pagenav" title="PageNav" />
-                  <NavItem anchor="navitem" title="NavItem" />
-                </NavItem> */}
-              </PageNav>
+              <PageContent>
+                {this.renderContent()}
+              </PageContent>
             </Col>
           </Row>
+        </PageProvider>
+          
         </div>
       </div>
     );

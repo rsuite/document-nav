@@ -12,11 +12,22 @@
 
 ## 使用方法
 
-有两种使用方式：
+有**自动解析**和**手动设置**两种使用方式：
 
-### 傻瓜式
+### 自动解析
 
-只需传入 `content`，rsuite-page-nav 会自动从 `content` 中解析出所有的 `h` 标签，并生成导航。
+只需按照如下结构组合代码，rsuite-page-nav 会自动从 `PageContent` 中解析出所有的 `h` 标签，并生成导航菜单。
+
+`PageProvider` 负责 `PageContent` 与 `PageNav` 的协作，需放在外层，中间可以任意布局。
+
+```
+<PageProvider>
+  <PageNav />
+  <PageContent>
+    ...content
+  </PageContent>
+</PageProvider>
+```
 
 可以使用 `minLevel` 和 `maxLevel` 来限制导航的标题级别，如 `minLevel = 2` 且 `maxLevel = 4` 时，只有 `h2, h3, h4` 会被导航。
 
@@ -38,11 +49,20 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="doc-page">
-        <PageNav
-          content={this.renderContent()}
-        />
-      </div>
+      <PageProvider>
+        <Row>
+          <Col md={2} xsHidden smHidden>
+            <PageNav
+              width={150}
+            />
+          </Col>
+          <Col md={10}>
+            <PageContent>
+              {this.renderContent()}
+            </PageContent>
+          </Col>
+        </Row>
+      </PageProvider>
     );
   }
 }
@@ -54,7 +74,7 @@ ReactDOM.render(<App />,
 
 **注意** 
 
-该方法会对 `content` 中的每一个要导航的 `h` 标签添加一个随机 `id`，并覆盖原有的 `id`。所以如果有需要为某个 `h` 标签使用自定义的 `id`，则需要将 `coverId` 属性设置为 `false`，但此时如果多个 `h` 标签本身已拥有重复的 `id` 则会出现错误的导航，应尽量避免，如撰写本文的使用的 `markdownloader` 组件就会将每一个标题添加一个 `'-'` 的 `id`，必须予以覆盖才能正确导航，如果无法避免，则只能使用下面的手动设置的方式。
+该方法会对 `PageContent` 中的每一个要导航的 `h` 标签添加一个随机 `id`，并覆盖原有的 `id`。所以如果有需要为某个 `h` 标签使用自定义的 `id`，则需要将 `coverId` 属性设置为 `false`，但此时如果多个 `h` 标签本身已拥有重复的 `id` 则会出现错误的导航，应尽量避免，如撰写本文的使用的 `markdownloader` 组件就会给每一个都标题添加一个 `'-'` 的 `id`，必须予以覆盖才能正确导航，如果无法避免，则只能使用下面的手动设置的方式。
 
 ### 手动设置
 
@@ -87,14 +107,11 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="container">
+      <PageProvider>
         <Row>
           <Col md={2} xsHidden smHidden>
-            
-          </Col>
-          <Col md={10}>
             <PageNav
-              content={this.renderContent()}
+              width={150}
             >
               <NavItem anchor="h-2" title="二级标题---1" />
               <NavItem anchor="h-3" title="二级标题---2">
@@ -103,8 +120,13 @@ class App extends Component {
               <NavItem anchor="h-4" title="二级标题---3" />
             </PageNav>
           </Col>
+          <Col md={10}>
+            <PageContent>
+              {this.renderContent()}
+            </PageContent>
+          </Col>
         </Row>
-      </div>
+      </PageProvider>
     );
   }
 }

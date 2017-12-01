@@ -1,26 +1,57 @@
 
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
-import PageNav from '../src';
+import { findDOMNode } from 'react-dom'
+import { mount } from 'enzyme';
+import { PageNav, PageContent, PageProvider, NavItem } from '../src';
 
-describe('PageNav test with default props', () => {
-  const wrapper = mount(<PageNav content={<h2 id="h2-2">二级标题</h2>} />);
-
-  it('id should be covered', () => {
-    expect(wrapper.find('#h2-2').exists()).toEqual(false);
-  });
-});
-
-describe('PageNav test with custom props', () => {
+describe('PageNav test with auto', () => {
   const wrapper = mount(
-    <PageNav
-      content={<h2 id="h2-2">二级标题</h2>}
-      coverId={false}
-    />);
+    <PageProvider>
+      <PageNav />
+      <PageContent>
+        <h2 id="h2-2">二级标题</h2>
+      </PageContent>
+    </PageProvider>
+  );
 
-  it('id should not be covered', () => {
-    expect(wrapper.find('#h2-2').exists()).toEqual(true);
+  const instance = findDOMNode(wrapper.instance());
+
+  it('nav should be render', () => {
+    expect(wrapper.find('.page-nav').exists()).toEqual(true);
+  });
+
+  it('href == id', () => {
+    const href =  instance.querySelector('.nav-link').getAttribute('href').replace('#', '');
+    const id = instance.querySelector('h2').id;
+    expect(href === id).toEqual(true);
   });
 
 });
+
+describe('PageNav test with custom navItems', () => {
+  const wrapper = mount(
+    <PageProvider>
+      <PageNav>
+        <NavItem title="二级标题" anchor="h2-2" />
+      </PageNav>
+      <PageContent>
+        <h2 id="h2-2">二级标题</h2>
+      </PageContent>
+    </PageProvider>
+  );
+
+  const instance = findDOMNode(wrapper.instance());
+
+  it('nav should be render', () => {
+    expect(wrapper.find('.page-nav').exists()).toEqual(true);
+  });
+
+  it('href == id', () => {
+    const href =  instance.querySelector('.nav-link').getAttribute('href').replace('#', '');
+    const id = instance.querySelector('h2').id;
+    expect(href === id).toEqual(true);
+  });
+
+});
+
 

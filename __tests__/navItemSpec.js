@@ -13,7 +13,8 @@ describe('NavItem test', () => {
     />, {
       context: {
         scrollBar: 'left',
-        activeAnchor: 'h-2-2'
+        activeAnchor: 'h-2-2',
+        showOrderNumber: true
       }
     }
   );
@@ -33,7 +34,7 @@ describe('NavItem test', () => {
   });
 
   it('padding', () => {
-    expect(link.html()).toMatch(/padding-left: 40px;/);
+    expect(link.html()).toMatch(/padding-left: 35px;/);
   });
 
   it('href', () => {
