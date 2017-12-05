@@ -1,4 +1,3 @@
-const argTypes = ['props', 'state', 'context'];
 
 export function equal(a, b) {
   if (a === b) {
@@ -21,18 +20,24 @@ export function equal(a, b) {
  * @param { [Array] } nextState // nextState
  * @param { [Array] } nextContext // nextContext
  */
-function pureUpdate(...rest) {
-  for (let i = 0; i < rest.length; i += 1) {
-    const prev = this[argTypes[i]];
-    const next = rest[i];
-    const keys = Object.keys(next);
-    for (let k = 0; k < keys.length; k += 1) {
-      if (!equal(prev[keys[k]], next[keys[k]])) {
-        return true;
-      }
+function pureUpdate(nextProps, nextState, nextContext) {
+  for (let key in nextProps) {
+    if (!equal(this.props[key], nextProps[key])) {
+      return true;
+    }
+  }
+  for (let key in nextState) {
+    if (!equal(this.state[key], nextState[key])) {
+      return true;
+    }
+  }
+  for (let key in nextContext) {
+    if (!equal(this.context[key], nextContext[key])) {
+      return true;
     }
   }
   return false;
 }
+
 
 export default pureUpdate;
