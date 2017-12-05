@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import createNavItems from '../util/createNavItems';
 import pureUpdate from '../util/pure';
+import { itemHeight } from '../constants';
 
 class PageNav extends Component {
   static propTypes = {
@@ -16,7 +16,7 @@ class PageNav extends Component {
     maxLevel: PropTypes.number,
     width: PropTypes.number,
     scrollBar: PropTypes.string,
-    coverId: PropTypes.bool,
+    // coverId: PropTypes.bool,
     fixed: PropTypes.bool,
     showOrderNumber: PropTypes.bool
   }
@@ -64,6 +64,7 @@ class PageNav extends Component {
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.scrollListener);
+    window.removeEventListener('resize', this.resizeListener);
   }
 
   setScrollListener(ref, anchors) {
@@ -74,15 +75,30 @@ class PageNav extends Component {
     }
     this.scrollListener = () => {
       let index = 0;
+      const { activeAnchor } = this.state;
       elList.find((el, i) => {
         const position = el.getBoundingClientRect();
         index = i;
         return position.top > 100;
       });
       const nextAnchor = anchors[index - 1] || anchors[0];
-      this.setState({
-        activeAnchor: nextAnchor
-      });
+      if (nextAnchor !== activeAnchor) {
+        this.setState({
+          activeAnchor: nextAnchor
+        });
+        const nav = document.querySelector(`a[href='#${activeAnchor}']`);
+        const pageNav = this.pageNav;
+        if (nav && pageNav) {
+          const navTop = nav.getBoundingClientRect().top - pageNav.getBoundingClientRect().top;
+          const maxCount = parseInt(pageNav.clientHeight / nav.offsetHeight, 10);
+          if (navTop + (itemHeight * 2) > pageNav.clientHeight) {
+            pageNav.scrollTop = pageNav.scrollTop + ((maxCount - 1) * itemHeight);
+          }
+          if (navTop < 2 * itemHeight) {
+            pageNav.scrollTop = pageNav.scrollTop - ((maxCount - 1) * itemHeight);
+          }
+        }
+      }
     };
     window.addEventListener('scroll', this.scrollListener);
   }
@@ -90,24 +106,20 @@ class PageNav extends Component {
   // 遍历所有标题
   traverseTitle(node, titleList, anchors) {
     const type = node.tagName;
-    const { coverId } = this.props;
+    // const { coverId } = this.props;
     if (/^H[1-6]/.test(type)) {
-      let r = `${Math.round(Math.random() * 10000)}`;
-      let anchor = node.id;
-      if (coverId || !anchor) {
-        anchor = r;
-        node.id = anchor;
-      }
+      let title = node.innerText;
+      node.id = title;
 
       let level = parseInt(type.replace('H', ''), 10);
       const { minLevel, maxLevel } = this.props;
       if (level >= minLevel && level <= maxLevel) {
         titleList.push({
-          title: node.innerText,
-          anchor,
+          title,
+          anchor: title,
           level
         });
-        anchors.push(anchor);
+        anchors.push(title);
       }
     } else {
       const { children } = node;
@@ -139,6 +151,21 @@ class PageNav extends Component {
     fixed && this.setScrollListener(content, anchors);
   }
 
+  handelNavMount(nav) {
+    if (!this.pageNav) {
+      this.pageNav = nav;
+    }
+    if (this.resizeListener) {
+      window.removeEventListener('resize', this.resizeListener);
+    }
+    const resizeListener = () => {
+      this.pageNav.style.height = `${itemHeight * parseInt((innerHeight - this.pageNav.offsetTop) / itemHeight, 10)}px`;
+    };
+    window.addEventListener('resize', resizeListener);
+    this.resizeListener = resizeListener;
+    resizeListener();
+  }
+
   renderNavItems() {
     let anchors = [];
     const { children, scrollBar = 'left' } = this.props;
@@ -149,7 +176,8 @@ class PageNav extends Component {
         index: `${i + 1}`,
         level: 1,
         activeAnchor,
-        scrollBar
+        scrollBar,
+        key: item.props.anchor
       });
     });
     this.setState({
@@ -169,6 +197,7 @@ class PageNav extends Component {
           position: fixed ? 'fixed' : 'relative',
           ...(fixed && offset)
         }}
+        ref={ref => this.handelNavMount(ref)}
       >
         { navItems }
       </div>

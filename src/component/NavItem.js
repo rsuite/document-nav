@@ -1,4 +1,4 @@
-import React, { PureComponent, Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import createNavItems from '../util/createNavItems';
 import pureUpdate from '../util/pure';
@@ -29,16 +29,17 @@ class NavItem extends Component {
       active: false
     };
   }
-  shouldComponentUpdate = pureUpdate.bind(this);
+  shouldComponentUpdate = pureUpdate.bind(this)
   renderSubNavItems() {
     const { children, index, level, subItems } = this.props;
     if (children) {
-      return React.Children.map(children, (item, i) => {
-        return React.cloneElement(item, {
+      return React.Children.map(children, (item, i) =>
+        React.cloneElement(item, {
           index: `${index}.${i + 1}`,
-          level: level + 1
-        });
-      });
+          level: level + 1,
+          key: item.props.anchor
+        })
+      );
     }
     return createNavItems(subItems, level, index);
   }
@@ -54,7 +55,7 @@ class NavItem extends Component {
           href={`#${anchor}`}
           className={`nav-link ${active ? 'active' : ''} scroll-bar-${scrollBar}`}
           style={{
-            paddingLeft: `${(level - 1) * 20 + BASE_PADDING_LEFT}px`
+            paddingLeft: `${((level - 1) * 20) + BASE_PADDING_LEFT}px`
           }}
         >
           { showOrderNumber ? `${index} ${title}` : title}
@@ -67,7 +68,6 @@ class NavItem extends Component {
             {this.renderSubNavItems()}
           </div> : null
         }
-        
       </div>
 
     );

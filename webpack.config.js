@@ -112,9 +112,11 @@ module.exports = (env = {}) => {
   //   });
   // }
 
+  const docsDir = NODE_ENV === 'development' ? 'docs/index.dev' : 'docs/index';
+
   return Object.assign({}, common, {
     entry: [
-      path.resolve(__dirname, 'docs/index')
+      path.resolve(__dirname, docsDir)
     ]
   });
 };

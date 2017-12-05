@@ -5648,6 +5648,21 @@ rsuite-affix@^1.0.3:
     dom-lib "0.2.6"
     element-resize-event "^2.0.7"
 
+rsuite-docs@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/rsuite-docs/-/rsuite-docs-0.2.0.tgz#52cd2c0b3180807499b40c89b0bbb20f4d644112"
+  dependencies:
+    rsuite-page-nav "^1.1.2"
+
+rsuite-page-nav@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/rsuite-page-nav/-/rsuite-page-nav-1.1.2.tgz#a7d6ca1e5bb4e46411139b6a2966b0411647aaf3"
+  dependencies:
+    classnames "^2.2.5"
+    dom-lib "^0.2.3"
+    prop-types "^15.5.10"
+    react-addons-css-transition-group "^15.6.0"
+
 rsuite-theme@^2.0.0-beta.1-1:
   version "2.0.15"
   resolved "http://registry.npm.taobao.org/rsuite-theme/download/rsuite-theme-2.0.15.tgz#7f6c71f96dd3faf616431a3844756d961456b357"

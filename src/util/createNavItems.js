@@ -1,4 +1,4 @@
-import React, { PureComponent, Component } from 'react';
+import React from 'react';
 import NavItem from '../component/NavItem';
 
 // 避免 subItems 为空数组时因为引用地址不同导致 NavItem 不必要的渲染的问题
@@ -39,7 +39,6 @@ const createNavItems = (list, parentLevel, parentIndex) => {
           subItems={subItems.length === 0 ? emptyArray : subItems}
           index={parentIndex ? `${parentIndex}.${index}` : `${index}`}
           key={item.anchor}
-          
         />
       );
       i = nextIndex;
