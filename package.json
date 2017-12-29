@@ -1,6 +1,6 @@
 {
   "name": "rsuite-page-nav",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "A rsuite navigation component.",
   "main": "lib/index.js",
   "directories": {
@@ -26,7 +26,7 @@
     "collectCoverage": true
   },
   "scripts": {
-    "dev": "NODE_ENV=development webpack-dev-server  --inline --progress --colors --port 3000 --host 0.0.0.0 --devtool source-map ",
+    "dev": "NODE_ENV=development webpack-dev-server  --inline --progress --colors --port 3001 --host 0.0.0.0 --devtool source-map ",
     "docs": "rm -rf assets &&  NODE_ENV=production webpack ",
     "build": "rm -rf lib  && babel src --out-dir lib && cp -R src/less lib",
     "publish-docs": "node docs/gh-pages.js",

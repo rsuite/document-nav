@@ -37,7 +37,7 @@ class NavItem extends Component {
         React.cloneElement(item, {
           index: `${index}.${i + 1}`,
           level: level + 1,
-          key: item.props.anchor
+          key: `${index}.${i + 1} ${item.props.anchor}`
         })
       );
     }

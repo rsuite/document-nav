@@ -77,9 +77,12 @@ class PageNav extends Component {
       let index = 0;
       const { activeAnchor } = this.state;
       elList.find((el, i) => {
-        const position = el.getBoundingClientRect();
-        index = i;
-        return position.top > 100;
+        if (el) {
+          const position = el.getBoundingClientRect();
+          index = i;
+          return position.top > 100;
+        }
+        return false;
       });
       const nextAnchor = anchors[index - 1] || anchors[0];
       if (nextAnchor !== activeAnchor) {
@@ -177,7 +180,7 @@ class PageNav extends Component {
         level: 1,
         activeAnchor,
         scrollBar,
-        key: item.props.anchor
+        key: `${i + 1} ${item.props.anchor}`
       });
     });
     this.setState({

@@ -31,27 +31,29 @@ const createNavItems = (list, parentLevel, parentIndex) => {
     }
     if (nextIndex > 0) {
       const subItems = list.slice(i + 1, nextIndex);
+      const key = parentIndex ? `${parentIndex}.${index}` : `${index}`;
       navItems.push(
         <NavItem
           anchor={item.anchor}
           title={item.title}
           level={parentLevel + 1}
           subItems={subItems.length === 0 ? emptyArray : subItems}
-          index={parentIndex ? `${parentIndex}.${index}` : `${index}`}
-          key={item.anchor}
+          index={key}
+          key={`${key} ${item.anchor}`}
         />
       );
       i = nextIndex;
     } else {
       const subItems = list.slice(i + 1, list.length);
+      const key = parentIndex ? `${parentIndex}.${index}` : `${index}`;
       navItems.push(
         <NavItem
           anchor={item.anchor}
           title={item.title}
           level={parentLevel + 1}
           subItems={subItems.length === 0 ? emptyArray : subItems}
-          index={parentIndex ? `${parentIndex}.${index}` : `${index}`}
-          key={item.anchor}
+          index={key}
+          key={`${key} ${item.anchor}`}
         />
       );
       break;
