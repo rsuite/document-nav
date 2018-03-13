@@ -1,13 +1,22 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import PropTypes from 'prop-types';
-import pureUpdate from '../util/pure';
+import shallowCompare from '../util/shallowCompare';
 
-class PageProvider extends Component {
+type Props = {
+  children: React.Node
+}
+
+type State = {
+  content: ?HTMLElement
+}
+
+class PageProvider extends React.Component<Props, State> {
   static childContextTypes = {
     content: PropTypes.any,
     setContent: PropTypes.func,
   }
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       content: null,
@@ -19,8 +28,8 @@ class PageProvider extends Component {
       setContent: this.setContent
     };
   }
-  shouldComponentUpdate = pureUpdate.bind(this);
-  setContent = (content) => {
+  shouldComponentUpdate = shallowCompare.bind(this);
+  setContent = (content: HTMLElement) => {
     this.setState({
       content
     });

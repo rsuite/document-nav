@@ -18,6 +18,7 @@ scrollBar | string | `right` | 导航栏边上的滚动条位置，`left` 或 `r
 minLevel | number | `2` | 最小导航级别，默认为 `2` 即 `h2`
 maxLevel | number | `4` | 最大导航级别，默认为 `4` 即 `h4`
 showOrderNumber | boolean | `true` | 是否显示标题前的序号
+once | boolean | `true` | 只解析一次文档？设为`true`则只会解析一次，文档发生变化时不会重新解析，性能较好。
 
 
 ### NavItem

@@ -1,10 +1,17 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import NavItem from '../component/NavItem';
 
 // 避免 subItems 为空数组时因为引用地址不同导致 NavItem 不必要的渲染的问题
 import { emptyArray } from '../constants';
 
-const createNavItems = (list, parentLevel, parentIndex) => {
+type List = Array<{
+    title: string,
+    anchor: string,
+    level: number
+  }>;
+
+const createNavItems = (list: List, parentLevel: number, parentIndex?: string | number) => {
   const navItems = [];
   if (list.length === 1) {
     const item = list[0];
@@ -12,7 +19,7 @@ const createNavItems = (list, parentLevel, parentIndex) => {
       anchor={item.anchor}
       title={item.title}
       level={parentLevel + 1}
-      index={`${parentIndex}.1`}
+      index={parentIndex ? `${parentIndex}.1` : '1'}
     />);
   }
   if (list.length === 0) {

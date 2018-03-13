@@ -1,35 +1,41 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import createNavItems from '../util/createNavItems';
-import pureUpdate from '../util/pure';
+import shallowCompare from '../util/shallowCompare';
 
+type Props = {
+  index: string,
+  level: number,
+  title: string,
+  anchor: string,
+  subItems?: Array<{
+    title: string,
+    level: number,
+    anchor: string
+  }>,
+  children?: React.Node
+}
+
+type State = {
+  active: boolean
+}
 
 const BASE_PADDING_LEFT = 15;
 
-class NavItem extends Component {
-  static propTypes = {
-    index: PropTypes.string,
-    level: PropTypes.number,
-    title: PropTypes.string,
-    anchor: PropTypes.string,
-    subItems: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string,
-      level: PropTypes.number,
-      anchor: PropTypes.string
-    })),
-  }
+class NavItem extends React.Component<Props, State> {
   static contextTypes = {
     scrollBar: PropTypes.oneOf(['left', 'right']),
     activeAnchor: PropTypes.string,
     showOrderNumber: PropTypes.bool
   }
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       active: false
     };
   }
-  shouldComponentUpdate = pureUpdate.bind(this)
+  shouldComponentUpdate = shallowCompare.bind(null, this)
   renderSubNavItems() {
     const { children, index, level, subItems } = this.props;
     if (children) {

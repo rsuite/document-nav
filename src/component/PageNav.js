@@ -1,25 +1,41 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import createNavItems from '../util/createNavItems';
-import pureUpdate from '../util/pure';
+import NavItem from './NavItem';
+import shallowCompare from '../util/shallowCompare';
 import { itemHeight } from '../constants';
 
-class PageNav extends Component {
-  static propTypes = {
-    offset: PropTypes.shape({
-      top: PropTypes.number,
-      right: PropTypes.number,
-      bottom: PropTypes.number,
-      left: PropTypes.number,
-    }),
-    minLevel: PropTypes.number,
-    maxLevel: PropTypes.number,
-    width: PropTypes.number,
-    scrollBar: PropTypes.string,
-    // coverId: PropTypes.bool,
-    fixed: PropTypes.bool,
-    showOrderNumber: PropTypes.bool
-  }
+type Props = {
+  offset: {
+    top?: number,
+    right?: number,
+    bottom?: number,
+    left?: number
+  },
+  minLevel: number,
+  maxLevel: number,
+  width?: number,
+  scrollBar: 'left' | 'right',
+  fixed: boolean,
+  showOrderNumber: boolean,
+  once: boolean,
+  children?: React.Element<typeof NavItem>
+}
+
+type State = {
+  anchors: Array<string>,
+  activeAnchor?: string,
+  navItems?: React.Node
+}
+
+type TitleList = Array<{
+  title: string,
+  anchor: string,
+  level: number
+}>
+
+class PageNav extends React.Component<Props, State> {
   static defaultProps = {
     offset: {
       top: 100,
@@ -31,7 +47,8 @@ class PageNav extends Component {
     coverId: true,
     show: true,
     fixed: true,
-    showOrderNumber: true
+    showOrderNumber: true,
+    once: true
   }
   static contextTypes = {
     content: PropTypes.any
@@ -41,12 +58,16 @@ class PageNav extends Component {
     activeAnchor: PropTypes.string,
     showOrderNumber: PropTypes.bool
   }
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       anchors: []
     };
   }
+  scrollListener: ?any;
+  resizeListener: ?any;
+  scrollWrap: ?HTMLElement;
+  pageNav: ?HTMLElement;
   getChildContext() {
     const { scrollBar, fixed, showOrderNumber } = this.props;
     const { anchors, activeAnchor = fixed ? anchors[0] : '' } = this.state;
@@ -56,9 +77,12 @@ class PageNav extends Component {
       showOrderNumber
     };
   }
-  shouldComponentUpdate = pureUpdate.bind(this);
-  componentWillUpdate(nextProps, nextState, nextContext) {
-    if (this.context.content !== nextContext.content) {
+  shouldComponentUpdate = shallowCompare.bind(null, this);
+  componentWillUpdate(nextProps: Props, nextState: State, nextContext: any) {
+    const { once } = this.props;
+    if (once && !this.context.content && nextContext.content) {
+      this.handelContentMount(nextContext.content);
+    } else if (!once && this.context.content !== nextContext.content) {
       this.handelContentMount(nextContext.content);
     }
   }
@@ -67,7 +91,7 @@ class PageNav extends Component {
     window.removeEventListener('resize', this.resizeListener);
   }
 
-  setScrollListener(ref, anchors) {
+  setScrollListener(ref: HTMLElement, anchors: Array<string>) {
     this.scrollWrap = ref;
     const elList = anchors.map(anchor => document.getElementById(anchor));
     if (this.scrollListener) {
@@ -77,19 +101,19 @@ class PageNav extends Component {
       let index = 0;
       const { activeAnchor } = this.state;
       elList.find((el, i) => {
-        if (el) {
-          const position = el.getBoundingClientRect();
-          index = i;
-          return position.top > 100;
+        if (!el) {
+          return false;
         }
-        return false;
+        const position = el.getBoundingClientRect();
+        index = i;
+        return position.top > 100;
       });
       const nextAnchor = anchors[index - 1] || anchors[0];
       if (nextAnchor !== activeAnchor) {
         this.setState({
           activeAnchor: nextAnchor
         });
-        const nav = document.querySelector(`a[href='#${activeAnchor}']`);
+        const nav = document.querySelector(`a[href='#${nextAnchor}']`);
         const pageNav = this.pageNav;
         if (nav && pageNav) {
           const navTop = nav.getBoundingClientRect().top - pageNav.getBoundingClientRect().top;
@@ -107,11 +131,14 @@ class PageNav extends Component {
   }
 
   // 遍历所有标题
-  traverseTitle(node, titleList, anchors) {
+  traverseTitle(node: HTMLElement, titleList: TitleList, anchors: Array<string>) {
+    if (!node || !titleList || !anchors) {
+      return false;
+    }
     const type = node.tagName;
     // const { coverId } = this.props;
     if (/^H[1-6]/.test(type)) {
-      let title = node.innerText;
+      const title = node.innerText || '';
       node.id = title;
 
       let level = parseInt(type.replace('H', ''), 10);
@@ -132,9 +159,9 @@ class PageNav extends Component {
     }
   }
 
-  handelContentMount(content) {
-    const titleList = [];
-    const anchors = [];
+  handelContentMount(content: HTMLElement) {
+    const titleList: TitleList = [];
+    const anchors: Array<string> = [];
     const { children, minLevel, maxLevel, fixed } = this.props;
     if (!children) {
       this.traverseTitle(content, titleList, anchors);
@@ -154,15 +181,19 @@ class PageNav extends Component {
     fixed && this.setScrollListener(content, anchors);
   }
 
-  handelNavMount(nav) {
-    if (!this.pageNav) {
-      this.pageNav = nav;
+  handelNavMount(nav: HTMLDivElement): any {
+    if (!nav) {
+      return false;
     }
+    this.pageNav = nav;
     if (this.resizeListener) {
       window.removeEventListener('resize', this.resizeListener);
     }
     const resizeListener = () => {
-      this.pageNav.style.height = `${itemHeight * parseInt((innerHeight - this.pageNav.offsetTop) / itemHeight, 10)}px`;
+      const pageNav = this.pageNav;
+      if (pageNav) {
+        pageNav.style.height = `${itemHeight * parseInt((innerHeight - pageNav.offsetTop) / itemHeight, 10)}px`;
+      }
     };
     window.addEventListener('resize', resizeListener);
     this.resizeListener = resizeListener;
@@ -198,7 +229,7 @@ class PageNav extends Component {
         style={{
           width: fixed ? width || 250 : width || '100%',
           position: fixed ? 'fixed' : 'relative',
-          ...(fixed && offset)
+          ...(fixed ? offset : {})
         }}
         ref={ref => this.handelNavMount(ref)}
       >
