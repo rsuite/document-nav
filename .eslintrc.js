@@ -18,7 +18,8 @@ module.exports = {
   'parser': 'babel-eslint',
   'plugins': [
     'react',
-    'babel'
+    'babel',
+    'flowtype'
   ],
   'parserOptions': {
     'ecmaVersion': 6,
