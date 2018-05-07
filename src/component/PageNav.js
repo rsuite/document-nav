@@ -22,19 +22,19 @@ type Props = {
   showOrderNumber: boolean,
   once: boolean,
   children?: React.Element<typeof NavItem>
-}
+};
 
 type State = {
   anchors: Array<string>,
   activeAnchor?: string,
   navItems?: React.Node
-}
+};
 
 type TitleList = Array<{
   title: string,
   anchor: string,
   level: number
-}>
+}>;
 
 class PageNav extends React.Component<Props, State> {
   static defaultProps = {
@@ -50,15 +50,15 @@ class PageNav extends React.Component<Props, State> {
     fixed: true,
     showOrderNumber: true,
     once: true
-  }
+  };
   static contextTypes = {
     content: PropTypes.any
-  }
+  };
   static childContextTypes = {
     scrollBar: PropTypes.string,
     activeAnchor: PropTypes.string,
     showOrderNumber: PropTypes.bool
-  }
+  };
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -90,6 +90,7 @@ class PageNav extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('scroll', this.scrollListener);
     window.removeEventListener('resize', this.resizeListener);
+    this.pageNav = null;
   }
 
   setScrollListener(ref: HTMLElement, anchors: Array<string>) {
@@ -110,7 +111,7 @@ class PageNav extends React.Component<Props, State> {
         return position.top > 100;
       });
       const nextAnchor = anchors[index - 1] || anchors[0];
-      if (nextAnchor !== activeAnchor) {
+      if (nextAnchor !== activeAnchor && this.pageNav) {
         this.setState({
           activeAnchor: nextAnchor
         });
@@ -119,16 +120,16 @@ class PageNav extends React.Component<Props, State> {
         if (nav && pageNav) {
           const navTop = nav.getBoundingClientRect().top - pageNav.getBoundingClientRect().top;
           const maxCount = parseInt(pageNav.clientHeight / nav.offsetHeight, 10);
-          if (navTop + (itemHeight * 2) > pageNav.clientHeight) {
-            pageNav.scrollTop = pageNav.scrollTop + ((maxCount - 1) * itemHeight);
+          if (navTop + itemHeight * 2 > pageNav.clientHeight) {
+            pageNav.scrollTop = pageNav.scrollTop + (maxCount - 1) * itemHeight;
           }
           if (navTop < 2 * itemHeight) {
-            pageNav.scrollTop = pageNav.scrollTop - ((maxCount - 1) * itemHeight);
+            pageNav.scrollTop = pageNav.scrollTop - (maxCount - 1) * itemHeight;
           }
         }
       }
     };
-    window.addEventListener('scroll', throttle(this.scrollListener, 150));
+    window.addEventListener('scroll', throttle(this.scrollListener, 300));
   }
 
   // 遍历所有标题
@@ -193,7 +194,8 @@ class PageNav extends React.Component<Props, State> {
     const resizeListener = () => {
       const pageNav = this.pageNav;
       if (pageNav) {
-        pageNav.style.height = `${itemHeight * parseInt((innerHeight - pageNav.offsetTop) / itemHeight, 10)}px`;
+        pageNav.style.height = `${itemHeight *
+          parseInt((innerHeight - pageNav.offsetTop) / itemHeight, 10)}px`;
       }
     };
     window.addEventListener('resize', resizeListener);
@@ -234,11 +236,10 @@ class PageNav extends React.Component<Props, State> {
         }}
         ref={ref => this.handelNavMount(ref)}
       >
-        { navItems }
+        {navItems}
       </div>
     );
   }
 }
 
 export default PageNav;
-
