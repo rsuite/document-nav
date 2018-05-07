@@ -5,6 +5,7 @@ import createNavItems from '../util/createNavItems';
 import NavItem from './NavItem';
 import shallowCompare from '../util/shallowCompare';
 import { itemHeight } from '../constants';
+import throttle from '../util/throttle';
 
 type Props = {
   offset: {
@@ -127,7 +128,7 @@ class PageNav extends React.Component<Props, State> {
         }
       }
     };
-    window.addEventListener('scroll', this.scrollListener);
+    window.addEventListener('scroll', throttle(this.scrollListener, 150));
   }
 
   // 遍历所有标题
