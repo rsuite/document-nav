@@ -2,20 +2,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import shallowCompare from './utils/shallowCompare';
+import NavContext from './NavContext';
 
 type Props = {
-  children: React.Node
+  children: React.Node,
 };
 
-class Content extends React.Component<Props> {
-  static contextTypes = {
-    setContent: PropTypes.func
-  };
-  shouldComponentUpdate = shallowCompare.bind(null, this);
+class Content extends React.PureComponent<Props> {
   render() {
     const { children } = this.props;
-    const { setContent } = this.context;
-    return <div ref={ref => setContent(ref)}>{children}</div>;
+    return (
+      <NavContext.Consumer>
+        {context => <div ref={ref => context.setContent(ref)}>{children}</div>}
+      </NavContext.Consumer>
+    );
   }
 }
 

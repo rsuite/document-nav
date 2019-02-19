@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import createNavItems from './utils/createNavItems';
 import shallowCompare from './utils/shallowCompare';
+import { NavItemContext } from './NavContext';
 
 type Props = {
   index: string,
@@ -14,7 +15,12 @@ type Props = {
     level: number,
     anchor: string
   }>,
-  children?: React.Node
+  children?: React.Node,
+
+  // NavItemContext
+  scrollBar: 'left' | 'right',
+  activeAnchor: string,
+  showOrderNumber: boolean
 };
 
 type State = {
@@ -24,11 +30,6 @@ type State = {
 const BASE_PADDING_LEFT = 15;
 
 class NavItem extends React.Component<Props, State> {
-  static contextTypes = {
-    scrollBar: PropTypes.oneOf(['left', 'right']),
-    activeAnchor: PropTypes.string,
-    showOrderNumber: PropTypes.bool
-  };
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -51,7 +52,7 @@ class NavItem extends React.Component<Props, State> {
   }
   render() {
     const { title, anchor, subItems, children, index, level } = this.props;
-    const { scrollBar = 'right', activeAnchor, showOrderNumber } = this.context;
+    const { scrollBar = 'right', activeAnchor, showOrderNumber } = this.props;
     const active = anchor === activeAnchor;
     return (
       <div className="nav-item">
@@ -72,4 +73,6 @@ class NavItem extends React.Component<Props, State> {
   }
 }
 
-export default NavItem;
+export default props => (
+  <NavItemContext.Consumer>{context => <NavItem {...props} {...context} />}</NavItemContext.Consumer>
+);

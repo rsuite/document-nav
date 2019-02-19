@@ -1,12 +1,12 @@
-import PageProvider from './component/PageProvider';
-import PageNav from './component/PageNav';
-import NavItem from './component/NavItem';
-import PageContent from './component/PageContent';
+import NavProvider from './NavProvider';
+import Nav from './Nav';
+import NavItem from './NavItem';
+import Content from './Content';
 
 
 export {
-  PageProvider,
-  PageNav,
+  NavProvider,
+  Nav,
   NavItem,
-  PageContent
+  Content
 };

@@ -4,17 +4,17 @@
 
 ### 自动解析
 
-只需按照如下结构组合代码，rsuite-page-nav 会自动从 `PageContent` 中解析出所有的 `h` 标签，并生成导航菜单。
+只需按照如下结构组合代码，rsuite-page-nav 会自动从 `Content` 中解析出所有的 `h` 标签，并生成导航菜单。
 
-`PageProvider` 负责 `PageContent` 与 `PageNav` 的协作，需放在外层，中间可以任意布局。
+`NavProvider` 负责 `Content` 与 `Nav` 的协作，需放在外层，中间可以任意布局。
 
 ```
-<PageProvider>
-  <PageNav />
-  <PageContent>
+<NavProvider>
+  <Nav />
+  <Content>
     ...content
-  </PageContent>
-</PageProvider>
+  </Content>
+</NavProvider>
 ```
 
 可以使用 `minLevel` 和 `maxLevel` 来限制导航的标题级别，如 `minLevel = 2` 且 `maxLevel = 4` 时，只有 `h2, h3, h4` 会被导航。
@@ -29,7 +29,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Markdown } from 'markdownloader';
-import { PageProvider, PageContent, PageNav} from 'rsuite-page-nav';
+import { NavProvider, Content, Nav} from 'rsuite-page-nav';
 
 class App extends Component {
   renderContent() {
@@ -41,20 +41,20 @@ class App extends Component {
   }
   render() {
     return (
-      <PageProvider>
+      <NavProvider>
         <Row>
           <Col md={2} xsHidden smHidden>
-            <PageNav
+            <Nav
               width={150}
             />
           </Col>
           <Col md={10}>
-            <PageContent>
+            <Content>
               {this.renderContent()}
-            </PageContent>
+            </Content>
           </Col>
         </Row>
-      </PageProvider>
+      </NavProvider>
     );
   }
 }
@@ -63,12 +63,12 @@ class App extends Component {
 
 ### 手动设置
 
-在 PageNav 组件中通过 NavItem 组件设置导航。
+在 Nav 组件中通过 NavItem 组件设置导航。
 
 ```js
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { PageProvider, PageContent, PageNav, NavItem } from 'rsuite-page-nav';
+import { NavProvider, Content, Nav, NavItem } from 'rsuite-page-nav';
 
 class App extends Component {
   renderContent() {
@@ -85,25 +85,25 @@ class App extends Component {
   }
   render() {
     return (
-      <PageProvider>
+      <NavProvider>
         <Row>
           <Col md={2} xsHidden smHidden>
-            <PageNav
+            <Nav
               width={150}
             >
               <NavItem anchor="h-3" title="二级标题---2">
                 <NavItem anchor="h-3-1" title="三级标题">
               </NavItem>
               <NavItem anchor="h-4" title="二级标题---3" />
-            </PageNav>
+            </Nav>
           </Col>
           <Col md={10}>
-            <PageContent>
+            <Content>
               {this.renderContent()}
-            </PageContent>
+            </Content>
           </Col>
         </Row>
-      </PageProvider>
+      </NavProvider>
     );
   }
 }

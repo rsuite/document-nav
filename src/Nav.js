@@ -22,7 +22,12 @@ type Props = {
   fixed: boolean,
   showOrderNumber: boolean,
   once: boolean,
-  children?: React.Element<typeof NavItem>
+  children?: React.Element<typeof NavItem>,
+
+  // NavContext
+  scrollBar: PropTypes.string,
+  activeAnchor: PropTypes.string,
+  showOrderNumber: PropTypes.bool
 };
 
 type State = {
@@ -37,10 +42,10 @@ type TitleList = Array<{
   level: number
 }>;
 
-class Nav extends React.Component<Props, State> {
+class Nav extends React.PureComponent<Props, State> {
   static defaultProps = {
     offset: {
-      top: 100,
+      top: 60,
       left: 30
     },
     minLevel: 2,
@@ -50,17 +55,11 @@ class Nav extends React.Component<Props, State> {
     show: true,
     fixed: true,
     showOrderNumber: true,
-    once: true
+    once: true,
   };
 
   static Item = NavItem;
-  static contextType = NavContext;
 
-  static childContextTypes = {
-    scrollBar: PropTypes.string,
-    activeAnchor: PropTypes.string,
-    showOrderNumber: PropTypes.bool
-  };
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -81,13 +80,13 @@ class Nav extends React.Component<Props, State> {
       showOrderNumber
     };
   }
-  shouldComponentUpdate = shallowCompare.bind(null, this);
-  componentWillUpdate(nextProps: Props, nextState: State, nextContext: any) {
+  // shouldComponentUpdate = shallowCompare.bind(null, this);
+  componentWillUpdate(nextProps: Props, nextState: State) {
     const { once } = this.props;
-    if (once && !this.context.content && nextContext.content) {
-      this.handelContentMount(nextContext.content);
-    } else if (!once && this.context.content !== nextContext.content) {
-      this.handelContentMount(nextContext.content);
+    if (once && !this.props.content && nextProps.content) {
+      this.handelContentMount(nextProps.content);
+    } else if (!once && this.props.content !== nextProps.content) {
+      this.handelContentMount(nextProps.content);
     }
   }
   componentWillUnmount() {
@@ -111,7 +110,7 @@ class Nav extends React.Component<Props, State> {
         }
         const position = el.getBoundingClientRect();
         index = i;
-        return position.top > 100;
+        return position.top > 0;
       });
       const nextAnchor = anchors[index - 1] || anchors[0];
       if (nextAnchor !== activeAnchor && this.pageNav) {
@@ -221,7 +220,7 @@ class Nav extends React.Component<Props, State> {
       const pageNav = this.pageNav;
       if (pageNav) {
         pageNav.style.height = `${itemHeight *
-          parseInt((innerHeight - pageNav.offsetTop) / itemHeight, 10)}px`;
+          parseInt((window.innerHeight - pageNav.offsetTop - 60) / itemHeight, 10)}px`;
       }
     };
 
@@ -249,4 +248,6 @@ class Nav extends React.Component<Props, State> {
   }
 }
 
-export default Nav;
+export default props => (
+  <NavContext.Consumer>{context => <Nav {...props} {...context} />}</NavContext.Consumer>
+);

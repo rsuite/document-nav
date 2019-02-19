@@ -1,23 +1,32 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { PageContainer } from 'rsuite-docs';
+import { Header, Navbar, Row, Col } from 'rsuite';
+import { NavProvider, Content as PageContent, Nav } from '../src';
 import Content from './component/content';
-import './less/index.dev.less';
+import './less/index.less'
 
 class App extends Component {
   render() {
     return (
-      <PageContainer
-        activeKey="PageNav"
-        githubURL="https://github.com/rsuite/rsuite-page-nav"
-      >
-        <Content />
-      </PageContainer>
+      <NavProvider>
+        <Row>
+          <Col md={5} xsHidden>
+            <Nav
+              width={150}
+              showOrderNumber={false}
+              // fixed={false}
+            />
+          </Col>
+          <Col md={19}>
+            <PageContent>
+              <Content />
+            </PageContent>
+          </Col>
+        </Row>
+      </NavProvider>
     );
   }
 }
 
-ReactDOM.render(<App />,
-  document.getElementById('app')
-);
+ReactDOM.render(<App />, document.getElementById('app'));
 

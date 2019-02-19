@@ -37,7 +37,7 @@ function render() {
 | Name            | Type `(Default)`                | Description                                                                                                            |
 | --------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | fixed           | boolean `(true)`                | 是否固定在屏幕的某一个位置？仅当为 `true` 时，`offset` 属性才会生效，为 `false` 时，导航菜单跟随文档流，也没有链接高亮 |
-| offset          | object `({left: 30, top: 100})` | 定位，属性为 `top`, `right`, `bottom`, `left`                                                                          |
+| offset          | object `({left: 30, top: 60})` | 定位，属性为 `top`, `right`, `bottom`, `left`                                                                          |
 | width           | number `(250)`                  | 导航部分的宽。当 `fixed` 为 `true` 时，默认为 `250`， 为 `false` 时默认为 `100%`                                       |
 | scrollBar       | string `('right')`              | 导航栏边上的滚动条位置，`left` 或 `right`                                                                              |
 | minLevel        | number `(2)`                    | 最小导航级别，默认为 `2` 即 `h2`                                                                                       |

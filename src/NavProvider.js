@@ -12,7 +12,7 @@ type State = {
   content: ?HTMLElement
 };
 
-class NavProvider extends React.Component<Props, State> {
+class NavProvider extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -20,7 +20,7 @@ class NavProvider extends React.Component<Props, State> {
     };
   }
 
-  shouldComponentUpdate = shallowCompare.bind(this);
+  // shouldComponentUpdate = shallowCompare.bind(this);
   setContent = (content: HTMLElement) => {
     this.setState({
       content
