@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount, render } from 'enzyme';
-import createNavItems from '../src/util/createNavItems';
+import createNavItems from '../src/utils/createNavItems';
 
 describe('createNavItems test', () => {
   it('list length is 0', () => {

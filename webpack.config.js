@@ -20,7 +20,7 @@ const plugins = [
   }),
   extractLess,
   new HtmlwebpackPlugin({
-    title: 'RSUITE InputNumber',
+    title: 'Document Nav',
     filename: 'index.html',
     template: 'docs/index.html',
     inject: true,
