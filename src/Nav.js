@@ -9,10 +9,10 @@ import NavContext, { NavItemContext } from './NavContext';
 
 type Props = {
   offset: {
-    top?: number,
-    right?: number,
-    bottom?: number,
-    left?: number
+    top?: number | 'auto',
+    right?: number | 'auto',
+    bottom?: number | 'auto',
+    left?: number | 'auto'
   },
   minLevel: number,
   maxLevel: number,
@@ -22,9 +22,9 @@ type Props = {
   showOrderNumber: boolean,
   once: boolean,
   children?: React.Element<typeof NavItem>,
-  scrollBar: PropTypes.string,
-  activeAnchor: PropTypes.string,
-  showOrderNumber: PropTypes.bool
+  scrollBar: string,
+  activeAnchor: string,
+  showOrderNumber: boolean
 };
 
 type State = {
@@ -43,7 +43,7 @@ class Nav extends React.PureComponent<Props, State> {
   static defaultProps = {
     offset: {
       top: 60,
-      left: 30
+      left: 'auto'
     },
     minLevel: 2,
     maxLevel: 4,
@@ -51,7 +51,7 @@ class Nav extends React.PureComponent<Props, State> {
     show: true,
     fixed: true,
     showOrderNumber: true,
-    once: true,
+    once: true
   };
 
   static Item = NavItem;
@@ -204,6 +204,7 @@ class Nav extends React.PureComponent<Props, State> {
     if (!nav) {
       return false;
     }
+    const { offset } = this.props;
 
     this.pageNav = nav;
 
@@ -214,7 +215,7 @@ class Nav extends React.PureComponent<Props, State> {
       const pageNav = this.pageNav;
       if (pageNav) {
         pageNav.style.height = `${itemHeight *
-          parseInt((window.innerHeight - pageNav.offsetTop - 60) / itemHeight, 10)}px`;
+          parseInt((window.innerHeight - (offset.top || offset.bottom) - 60) / itemHeight, 10)}px`;
       }
     };
 

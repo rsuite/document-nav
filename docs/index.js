@@ -11,7 +11,7 @@ class App extends Component {
       <NavProvider>
         <Grid>
           <Row>
-            <Col md={6} xsHidden>
+            <Col md={6}>
               <Nav width={150} showOrderNumber={false} />
             </Col>
             <Col md={18}>
