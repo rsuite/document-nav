@@ -1,6 +1,10 @@
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
-import createNavItems from '../src/util/createNavItems';
+import Enzyme, { shallow, mount, render } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import createNavItems from '../src/utils/createNavItems';
+
+Enzyme.configure({ adapter: new Adapter() });
+
 
 describe('createNavItems test', () => {
   it('list length is 0', () => {

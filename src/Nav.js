@@ -1,18 +1,18 @@
 // @flow
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import createNavItems from '../util/createNavItems';
+import createNavItems from './utils/createNavItems';
 import NavItem from './NavItem';
-import shallowCompare from '../util/shallowCompare';
-import { itemHeight } from '../constants';
-import throttle from '../util/throttle';
+import { itemHeight } from './constants';
+import throttle from './utils/throttle';
+import NavContext, { NavItemContext } from './NavContext';
 
 type Props = {
   offset: {
-    top?: number,
-    right?: number,
-    bottom?: number,
-    left?: number
+    top?: number | 'auto',
+    right?: number | 'auto',
+    bottom?: number | 'auto',
+    left?: number | 'auto'
   },
   minLevel: number,
   maxLevel: number,
@@ -21,7 +21,10 @@ type Props = {
   fixed: boolean,
   showOrderNumber: boolean,
   once: boolean,
-  children?: React.Element<typeof NavItem>
+  children?: React.Element<typeof NavItem>,
+  scrollBar: string,
+  activeAnchor: string,
+  showOrderNumber: boolean
 };
 
 type State = {
@@ -36,29 +39,23 @@ type TitleList = Array<{
   level: number
 }>;
 
-class PageNav extends React.Component<Props, State> {
+class Nav extends React.PureComponent<Props, State> {
   static defaultProps = {
     offset: {
-      top: 100,
-      left: 30
+      top: 60,
+      left: 'auto'
     },
     minLevel: 2,
     maxLevel: 4,
     scrollBar: 'right',
-    coverId: true,
     show: true,
     fixed: true,
     showOrderNumber: true,
     once: true
   };
-  static contextTypes = {
-    content: PropTypes.any
-  };
-  static childContextTypes = {
-    scrollBar: PropTypes.string,
-    activeAnchor: PropTypes.string,
-    showOrderNumber: PropTypes.bool
-  };
+
+  static Item = NavItem;
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -69,7 +66,8 @@ class PageNav extends React.Component<Props, State> {
   resizeListener: ?any;
   scrollWrap: ?HTMLElement;
   pageNav: ?HTMLElement;
-  getChildContext() {
+
+  getContext() {
     const { scrollBar, fixed, showOrderNumber } = this.props;
     const { anchors, activeAnchor = fixed ? anchors[0] : '' } = this.state;
     return {
@@ -78,13 +76,12 @@ class PageNav extends React.Component<Props, State> {
       showOrderNumber
     };
   }
-  shouldComponentUpdate = shallowCompare.bind(null, this);
-  componentWillUpdate(nextProps: Props, nextState: State, nextContext: any) {
+  componentWillUpdate(nextProps: Props, nextState: State) {
     const { once } = this.props;
-    if (once && !this.context.content && nextContext.content) {
-      this.handelContentMount(nextContext.content);
-    } else if (!once && this.context.content !== nextContext.content) {
-      this.handelContentMount(nextContext.content);
+    if (once && !this.props.content && nextProps.content) {
+      this.handelContentMount(nextProps.content);
+    } else if (!once && this.props.content !== nextProps.content) {
+      this.handelContentMount(nextProps.content);
     }
   }
   componentWillUnmount() {
@@ -108,7 +105,7 @@ class PageNav extends React.Component<Props, State> {
         }
         const position = el.getBoundingClientRect();
         index = i;
-        return position.top > 100;
+        return position.top > 0;
       });
       const nextAnchor = anchors[index - 1] || anchors[0];
       if (nextAnchor !== activeAnchor && this.pageNav) {
@@ -138,7 +135,6 @@ class PageNav extends React.Component<Props, State> {
       return false;
     }
     const type = node.tagName;
-    // const { coverId } = this.props;
     if (/^H[1-6]/.test(type)) {
       const title = node.innerText || '';
       node.id = title;
@@ -161,49 +157,7 @@ class PageNav extends React.Component<Props, State> {
     }
   }
 
-  handelContentMount(content: HTMLElement) {
-    const titleList: TitleList = [];
-    const anchors: Array<string> = [];
-    const { children, minLevel, maxLevel, fixed } = this.props;
-    if (!children) {
-      this.traverseTitle(content, titleList, anchors);
-      this.setState({
-        anchors
-      });
-      const list = titleList.filter(item => item.level >= minLevel && item.level <= maxLevel);
-      const navItems = createNavItems(list, 0);
-      this.setState({
-        navItems
-      });
-    } else {
-      this.setState({
-        navItems: this.renderNavItems()
-      });
-    }
-    fixed && this.setScrollListener(content, anchors);
-  }
-
-  handelNavMount(nav: HTMLDivElement): any {
-    if (!nav) {
-      return false;
-    }
-    this.pageNav = nav;
-    if (this.resizeListener) {
-      window.removeEventListener('resize', this.resizeListener);
-    }
-    const resizeListener = () => {
-      const pageNav = this.pageNav;
-      if (pageNav) {
-        pageNav.style.height = `${itemHeight *
-          parseInt((innerHeight - pageNav.offsetTop) / itemHeight, 10)}px`;
-      }
-    };
-    window.addEventListener('resize', resizeListener);
-    this.resizeListener = resizeListener;
-    resizeListener();
-  }
-
-  renderNavItems() {
+  getNavItems() {
     let anchors = [];
     const { children, scrollBar = 'left' } = this.props;
     const { activeAnchor } = this.state;
@@ -220,26 +174,75 @@ class PageNav extends React.Component<Props, State> {
     this.setState({
       anchors
     });
+
     return navItems;
+  }
+
+  handelContentMount(content: HTMLElement) {
+    const titleList: TitleList = [];
+    const anchors: Array<string> = [];
+    const { children, minLevel, maxLevel, fixed } = this.props;
+    if (!children) {
+      this.traverseTitle(content, titleList, anchors);
+      this.setState({
+        anchors
+      });
+      const list = titleList.filter(item => item.level >= minLevel && item.level <= maxLevel);
+      const navItems = createNavItems(list, 0);
+      this.setState({
+        navItems
+      });
+    } else {
+      this.setState({
+        navItems: this.getNavItems()
+      });
+    }
+    fixed && this.setScrollListener(content, anchors);
+  }
+
+  bindPageNavRef(nav: React.Ref<any>): any {
+    if (!nav) {
+      return false;
+    }
+    const { offset } = this.props;
+
+    this.pageNav = nav;
+
+    if (this.resizeListener) {
+      window.removeEventListener('resize', this.resizeListener);
+    }
+    const resizeListener = () => {
+      const pageNav = this.pageNav;
+      if (pageNav) {
+        pageNav.style.height = `${itemHeight *
+          parseInt((window.innerHeight - (offset.top || offset.bottom) - 60) / itemHeight, 10)}px`;
+      }
+    };
+
+    window.addEventListener('resize', resizeListener);
+    this.resizeListener = resizeListener;
+
+    resizeListener();
   }
 
   render() {
     const { offset, width, fixed } = this.props;
     const { navItems } = this.state;
+    const styles = {
+      width: fixed ? width || 250 : width || '100%',
+      position: fixed ? 'fixed' : 'relative',
+      ...(fixed ? offset : {})
+    };
     return (
-      <div
-        className="page-nav"
-        style={{
-          width: fixed ? width || 250 : width || '100%',
-          position: fixed ? 'fixed' : 'relative',
-          ...(fixed ? offset : {})
-        }}
-        ref={ref => this.handelNavMount(ref)}
-      >
-        {navItems}
-      </div>
+      <NavItemContext.Provider value={this.getContext()}>
+        <div className="document-nav" style={styles} ref={ref => this.bindPageNavRef(ref)}>
+          {navItems}
+        </div>
+      </NavItemContext.Provider>
     );
   }
 }
 
-export default PageNav;
+export default props => (
+  <NavContext.Consumer>{context => <Nav {...props} {...context} />}</NavContext.Consumer>
+);

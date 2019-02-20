@@ -5,23 +5,12 @@ const Content = () => {
   return (
     <div>
     <Markdown>
-      { require('../../README.md') }
+      { require('../md/doc.md') }
     </Markdown>
     <br />
-    <div>👈 左边那个就是</div>
     <Markdown>
-      {require('../md/course.md')}
+      {require('../md/demo.md')}
     </Markdown>
-    <Markdown>
-      { require('../md/props.md') }
-    </Markdown>
-
-    
-    { NODE_ENV === 'development' && 
-    <Markdown>
-      { require('../md/demo.md') }
-    </Markdown>
-    }
   </div>
   );
 }

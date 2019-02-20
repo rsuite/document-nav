@@ -1,6 +1,9 @@
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
-import NavItem from '../src/component/NavItem';
+import Enzyme, { shallow, mount, render } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import NavItem from '../src/NavItem';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('NavItem test', () => {
   const navItem = mount(
@@ -10,13 +13,11 @@ describe('NavItem test', () => {
       subItems={[]}
       index="1.1"
       level={2}
-    />, {
-      context: {
-        scrollBar: 'left',
-        activeAnchor: 'h-2-2',
-        showOrderNumber: true
-      }
-    }
+      
+      scrollBar="left"
+      activeAnchor="h-2-2"
+      showOrderNumber
+    />
   );
 
   const link = navItem.find('.nav-link');

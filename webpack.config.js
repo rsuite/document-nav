@@ -20,7 +20,7 @@ const plugins = [
   }),
   extractLess,
   new HtmlwebpackPlugin({
-    title: 'RSUITE InputNumber',
+    title: 'Document Nav',
     filename: 'index.html',
     template: 'docs/index.html',
     inject: true,
@@ -112,7 +112,7 @@ module.exports = (env = {}) => {
   //   });
   // }
 
-  const docsDir = NODE_ENV === 'development' ? 'docs/index.dev' : 'docs/index';
+  const docsDir = 'docs/index';
 
   return Object.assign({}, common, {
     entry: [

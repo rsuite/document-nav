@@ -1,19 +1,10 @@
-/**
-颜色变量见文件:
-https://github.com/rsuite/rsuite-theme/blob/next/src/less/commonly-variables.less
-注意：不要在自己的组件中声明颜色变量
-**/
 
-@import '~rsuite-theme/dist/less/commonly-variables';
+@doc-nav-active-color: #34c3ff;
+@doc-nav-font-color: #272c36;
+@doc-nav-line-color: #e5e5e5;
 
-@import (optional) "~rsuite-theme/dist/less/commonly-variables";
-@import (optional) "rsuite-theme/dist/less/commonly-variables";
-
-.page-nav {
+.document-nav {
   overflow: hidden;
-}
-
-.sub-nav-item {
 }
 
 .nav-item {
@@ -23,7 +14,7 @@ https://github.com/rsuite/rsuite-theme/blob/next/src/less/commonly-variables.les
 .nav-link {
   display: block;
   text-decoration: none;
-  color: @B900;
+  color: @doc-nav-font-color;
   font-size: 14px;
   position: relative;
   padding: 8px 0;
@@ -41,7 +32,7 @@ https://github.com/rsuite/rsuite-theme/blob/next/src/less/commonly-variables.les
     width: 1px;
     height: 100%;
     top: 0;
-    background: @B200;
+    background: @doc-nav-line-color;
   }
   &:hover {
     text-decoration: none;
@@ -53,10 +44,10 @@ https://github.com/rsuite/rsuite-theme/blob/next/src/less/commonly-variables.les
     right: 0;
   }
   &.active {
-    color: @H500;
+    color: @doc-nav-active-color;
     &::before {
       width: 2px;
-      background: @H500;
+      background: @doc-nav-active-color;
     }
   }
 }
