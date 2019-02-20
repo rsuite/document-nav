@@ -33,6 +33,7 @@ function render() {
 ## Style
 
 ```less
+@import "@rsuite/document-nav/lib/less/index.less";
 @doc-nav-active-color: #34c3ff;
 ```
 
@@ -95,10 +96,10 @@ function render() {
       <div className="row">
         <div className="col col-md-4">
           <Nav>
-            <NavItem anchor="h-3" title="二级标题---2">
-                <NavItem anchor="h-3-1" title="三级标题">
-              </NavItem>
-              <NavItem anchor="h-4" title="二级标题---3" />
+            <Nav.Item anchor="h-3" title="二级标题---2">
+                <Nav.Item anchor="h-3-1" title="三级标题">
+              </Nav.Item>
+              <Nav.Item anchor="h-4" title="二级标题---3" />
           </Nav>
         </div>
         <div className="col col-md-20">

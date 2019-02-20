@@ -1,6 +1,9 @@
 import React from 'react';
-import { shallow, mount, render } from 'enzyme';
+import Enzyme, { shallow, mount, render } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import NavItem from '../src/NavItem';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('NavItem test', () => {
   const navItem = mount(
