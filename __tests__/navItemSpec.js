@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount, render } from 'enzyme';
-import NavItem from '../src/component/NavItem';
+import NavItem from '../src/NavItem';
 
 describe('NavItem test', () => {
   const navItem = mount(

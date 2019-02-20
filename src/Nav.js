@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import createNavItems from './utils/createNavItems';
 import NavItem from './NavItem';
-import shallowCompare from './utils/shallowCompare';
 import { itemHeight } from './constants';
 import throttle from './utils/throttle';
 import NavContext, { NavItemContext } from './NavContext';
@@ -23,8 +22,6 @@ type Props = {
   showOrderNumber: boolean,
   once: boolean,
   children?: React.Element<typeof NavItem>,
-
-  // NavContext
   scrollBar: PropTypes.string,
   activeAnchor: PropTypes.string,
   showOrderNumber: PropTypes.bool
@@ -51,7 +48,6 @@ class Nav extends React.PureComponent<Props, State> {
     minLevel: 2,
     maxLevel: 4,
     scrollBar: 'right',
-    coverId: true,
     show: true,
     fixed: true,
     showOrderNumber: true,
@@ -80,7 +76,6 @@ class Nav extends React.PureComponent<Props, State> {
       showOrderNumber
     };
   }
-  // shouldComponentUpdate = shallowCompare.bind(null, this);
   componentWillUpdate(nextProps: Props, nextState: State) {
     const { once } = this.props;
     if (once && !this.props.content && nextProps.content) {
@@ -140,7 +135,6 @@ class Nav extends React.PureComponent<Props, State> {
       return false;
     }
     const type = node.tagName;
-    // const { coverId } = this.props;
     if (/^H[1-6]/.test(type)) {
       const title = node.innerText || '';
       node.id = title;

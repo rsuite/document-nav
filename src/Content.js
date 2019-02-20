@@ -1,7 +1,5 @@
 // @flow
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import shallowCompare from './utils/shallowCompare';
 import NavContext from './NavContext';
 
 type Props = {

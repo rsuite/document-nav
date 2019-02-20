@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import createNavItems from './utils/createNavItems';
-import shallowCompare from './utils/shallowCompare';
 import { NavItemContext } from './NavContext';
 
 type Props = {
@@ -16,8 +14,6 @@ type Props = {
     anchor: string
   }>,
   children?: React.Node,
-
-  // NavItemContext
   scrollBar: 'left' | 'right',
   activeAnchor: string,
   showOrderNumber: boolean
@@ -29,14 +25,13 @@ type State = {
 
 const BASE_PADDING_LEFT = 15;
 
-class NavItem extends React.Component<Props, State> {
+class NavItem extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       active: false
     };
   }
-  shouldComponentUpdate = shallowCompare.bind(null, this);
   renderSubNavItems() {
     const { children, index, level, subItems } = this.props;
     if (children) {

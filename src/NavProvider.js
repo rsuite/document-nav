@@ -1,7 +1,5 @@
 // @flow
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import shallowCompare from './utils/shallowCompare';
 import NavContext from './NavContext';
 
 type Props = {
@@ -20,7 +18,6 @@ class NavProvider extends React.PureComponent<Props, State> {
     };
   }
 
-  // shouldComponentUpdate = shallowCompare.bind(this);
   setContent = (content: HTMLElement) => {
     this.setState({
       content
@@ -34,7 +31,6 @@ class NavProvider extends React.PureComponent<Props, State> {
     };
   }
   render() {
-    const { children } = this.props;
     return (
       <NavContext.Provider value={this.getContext()}>{this.props.children}</NavContext.Provider>
     );

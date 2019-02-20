@@ -30,6 +30,12 @@ function render() {
 }
 ```
 
+## Style
+
+```less
+@doc-nav-active-color: #34c3ff;
+```
+
 ## Props
 
 ### `<Nav>`
