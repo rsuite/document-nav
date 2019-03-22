@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import createNavItems from './utils/createNavItems';
 import NavItem from './NavItem';
 import { itemHeight } from './constants';
@@ -18,7 +19,7 @@ type Props = {
   maxLevel: number,
   width?: number,
   scrollBar: 'left' | 'right',
-  fixed: boolean,
+  fixed: boolean | 'vertical',
   showOrderNumber: boolean,
   once: boolean,
   children?: React.Element<typeof NavItem>,
@@ -39,7 +40,7 @@ type TitleList = Array<{
   level: number
 }>;
 
-class Nav extends React.PureComponent<Props, State> {
+class Component extends React.PureComponent<Props, State> {
   static defaultProps = {
     offset: {
       top: 60,
@@ -197,7 +198,7 @@ class Nav extends React.PureComponent<Props, State> {
         navItems: this.getNavItems()
       });
     }
-    fixed && this.setScrollListener(content, anchors);
+    this.setScrollListener(content, anchors);
   }
 
   bindPageNavRef(nav: React.Ref<any>): any {
@@ -226,7 +227,7 @@ class Nav extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { offset, width, fixed } = this.props;
+    const { offset, width, fixed, style, className } = this.props;
     const { navItems } = this.state;
     const styles = {
       width: fixed ? width || 250 : width || '100%',
@@ -235,7 +236,11 @@ class Nav extends React.PureComponent<Props, State> {
     };
     return (
       <NavItemContext.Provider value={this.getContext()}>
-        <div className="document-nav" style={styles} ref={ref => this.bindPageNavRef(ref)}>
+        <div
+          className={classnames('document-nav', className)}
+          style={{ ...styles, ...style }}
+          ref={ref => this.bindPageNavRef(ref)}
+        >
           {navItems}
         </div>
       </NavItemContext.Provider>
@@ -243,6 +248,10 @@ class Nav extends React.PureComponent<Props, State> {
   }
 }
 
-export default props => (
-  <NavContext.Consumer>{context => <Nav {...props} {...context} />}</NavContext.Consumer>
+const Nav = props => (
+  <NavContext.Consumer>{context => <Component {...props} {...context} />}</NavContext.Consumer>
 );
+
+Nav.Item = NavItem;
+
+export default Nav;
