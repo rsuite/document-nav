@@ -26,7 +26,7 @@ type Props = {
   scrollBar: string,
   activeAnchor: string,
   showOrderNumber: boolean,
-  rtl:boolean
+  rtl: boolean
 };
 
 type State = {
@@ -80,11 +80,15 @@ class Component extends React.PureComponent<Props, State> {
     };
   }
   componentWillUpdate(nextProps: Props, nextState: State) {
-    const { once } = this.props;
+    const { once, rtl } = this.props;
+    if (rtl !== nextProps.rtl) {
+      this.handelContentMount(nextProps.content, nextProps.rtl);
+      return;
+    }
     if (once && !this.props.content && nextProps.content) {
-      this.handelContentMount(nextProps.content);
+      this.handelContentMount(nextProps.content, nextProps.rtl);
     } else if (!once && this.props.content !== nextProps.content) {
-      this.handelContentMount(nextProps.content);
+      this.handelContentMount(nextProps.content, nextProps.rtl);
     }
   }
   componentWillUnmount() {
@@ -182,10 +186,10 @@ class Component extends React.PureComponent<Props, State> {
     return navItems;
   }
 
-  handelContentMount(content: HTMLElement) {
+  handelContentMount(content: HTMLElement, rtl) {
     const titleList: TitleList = [];
     const anchors: Array<string> = [];
-    const { children, minLevel, maxLevel, fixed, rtl } = this.props;
+    const { children, minLevel, maxLevel, fixed } = this.props;
     if (!children) {
       this.traverseTitle(content, titleList, anchors);
       this.setState({
