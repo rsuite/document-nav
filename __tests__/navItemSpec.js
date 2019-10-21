@@ -13,7 +13,6 @@ describe('NavItem test', () => {
       subItems={[]}
       index="1.1"
       level={2}
-      
       scrollBar="left"
       activeAnchor="h-2-2"
       showOrderNumber
@@ -40,5 +39,25 @@ describe('NavItem test', () => {
 
   it('href', () => {
     expect(link.html()).toMatch(/href="#h-2-2"/);
+  });
+});
+
+describe('NavItem rtl', () => {
+  const navItem = mount(
+    <NavItem
+      anchor="h-2-2"
+      title="title2"
+      subItems={[]}
+      index="1.1"
+      level={2}
+      scrollBar="left"
+      activeAnchor="h-2-2"
+      showOrderNumber
+      rtl
+    />
+  );
+  const link = navItem.find('.nav-link');
+  it('padding', () => {
+    expect(link.html()).toMatch(/padding-right: 35px;/);
   });
 });

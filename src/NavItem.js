@@ -33,7 +33,7 @@ class NavItem extends React.PureComponent<Props, State> {
     };
   }
   renderSubNavItems() {
-    const { children, index, level, subItems } = this.props;
+    const { children, index, level, subItems, rtl } = this.props;
     if (children) {
       return React.Children.map(children, (item, i) =>
         React.cloneElement(item, {
@@ -43,10 +43,10 @@ class NavItem extends React.PureComponent<Props, State> {
         })
       );
     }
-    return createNavItems(subItems, level, index);
+    return createNavItems(subItems, level, index, rtl);
   }
   render() {
-    const { title, anchor, subItems, children, index, level } = this.props;
+    const { title, anchor, subItems, children, index, level, rtl } = this.props;
     const { scrollBar = 'right', activeAnchor, showOrderNumber } = this.props;
     const active = anchor === activeAnchor;
     return (
@@ -55,7 +55,7 @@ class NavItem extends React.PureComponent<Props, State> {
           href={`#${anchor}`}
           className={`nav-link ${active ? 'active' : ''} scroll-bar-${scrollBar}`}
           style={{
-            paddingLeft: `${(level - 1) * 20 + BASE_PADDING_LEFT}px`
+            [rtl ? 'paddingRight' : 'paddingLeft']: `${(level - 1) * 20 + BASE_PADDING_LEFT}px`
           }}
         >
           {showOrderNumber ? `${index} ${title}` : title}
@@ -69,5 +69,7 @@ class NavItem extends React.PureComponent<Props, State> {
 }
 
 export default props => (
-  <NavItemContext.Consumer>{context => <NavItem {...props} {...context} />}</NavItemContext.Consumer>
+  <NavItemContext.Consumer>
+    {context => <NavItem {...props} {...context} />}
+  </NavItemContext.Consumer>
 );

@@ -11,7 +11,7 @@ type List = Array<{
   level: number
 }>;
 
-const createNavItems = (list: List, parentLevel: number, parentIndex?: string | number) => {
+const createNavItems = (list: List, parentLevel: number, parentIndex?: string | number, rtl) => {
   const navItems = [];
 
   if (list.length === 1) {
@@ -22,6 +22,7 @@ const createNavItems = (list: List, parentLevel: number, parentIndex?: string | 
         title={item.title}
         level={parentLevel + 1}
         index={parentIndex ? `${parentIndex}.1` : '1'}
+        rtl={rtl}
       />
     );
   }
@@ -54,6 +55,7 @@ const createNavItems = (list: List, parentLevel: number, parentIndex?: string | 
           subItems={subItems.length === 0 ? emptyArray : subItems}
           index={key}
           key={`${key} ${item.anchor}`}
+          rtl={rtl}
         />
       );
       i = nextIndex;
@@ -68,6 +70,7 @@ const createNavItems = (list: List, parentLevel: number, parentIndex?: string | 
           subItems={subItems.length === 0 ? emptyArray : subItems}
           index={key}
           key={`${key} ${item.anchor}`}
+          rtl={rtl}
         />
       );
       break;

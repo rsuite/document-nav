@@ -25,7 +25,8 @@ type Props = {
   children?: React.Element<typeof NavItem>,
   scrollBar: string,
   activeAnchor: string,
-  showOrderNumber: boolean
+  showOrderNumber: boolean,
+  rtl:boolean
 };
 
 type State = {
@@ -52,7 +53,8 @@ class Component extends React.PureComponent<Props, State> {
     show: true,
     fixed: true,
     showOrderNumber: true,
-    once: true
+    once: true,
+    rtl: false
   };
 
   static Item = NavItem;
@@ -160,7 +162,7 @@ class Component extends React.PureComponent<Props, State> {
 
   getNavItems() {
     let anchors = [];
-    const { children, scrollBar = 'left' } = this.props;
+    const { children, scrollBar = 'left', rtl } = this.props;
     const { activeAnchor } = this.state;
     const navItems = React.Children.map(children, (item, i) => {
       anchors.push(item.props.anchor);
@@ -169,7 +171,8 @@ class Component extends React.PureComponent<Props, State> {
         level: 1,
         activeAnchor,
         scrollBar,
-        key: `${i + 1} ${item.props.anchor}`
+        key: `${i + 1} ${item.props.anchor}`,
+        rtl
       });
     });
     this.setState({
@@ -182,14 +185,14 @@ class Component extends React.PureComponent<Props, State> {
   handelContentMount(content: HTMLElement) {
     const titleList: TitleList = [];
     const anchors: Array<string> = [];
-    const { children, minLevel, maxLevel, fixed } = this.props;
+    const { children, minLevel, maxLevel, fixed, rtl } = this.props;
     if (!children) {
       this.traverseTitle(content, titleList, anchors);
       this.setState({
         anchors
       });
       const list = titleList.filter(item => item.level >= minLevel && item.level <= maxLevel);
-      const navItems = createNavItems(list, 0);
+      const navItems = createNavItems(list, 0, undefined, rtl);
       this.setState({
         navItems
       });
