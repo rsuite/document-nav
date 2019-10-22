@@ -39,7 +39,8 @@ class NavItem extends React.PureComponent<Props, State> {
         React.cloneElement(item, {
           index: `${index}.${i + 1}`,
           level: level + 1,
-          key: `${index}.${i + 1} ${item.props.anchor}`
+          key: `${index}.${i + 1} ${item.props.anchor}`,
+          rtl
         })
       );
     }

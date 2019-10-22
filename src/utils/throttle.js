@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /**
  * @author {@link https://github.com/jashkenas/underscore underscorejs}.
  * @version 1.7.0

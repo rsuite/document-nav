@@ -33,7 +33,7 @@ describe('NavItem test', () => {
     expect(link.hasClass('active')).toEqual(true);
   });
 
-  it('padding', () => {
+  it('padding should isn\'t rtl ', () => {
     expect(link.html()).toMatch(/padding-left: 35px;/);
   });
 
@@ -57,7 +57,7 @@ describe('NavItem rtl', () => {
     />
   );
   const link = navItem.find('.nav-link');
-  it('padding', () => {
+  it('padding should be rtl', () => {
     expect(link.html()).toMatch(/padding-right: 35px;/);
   });
 });
