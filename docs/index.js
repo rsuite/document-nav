@@ -16,7 +16,7 @@ class App extends Component {
     this.setState({
       rtl: !this.state.rtl
     });
-  }
+  };
   render() {
     return (
       <NavProvider>
@@ -24,7 +24,16 @@ class App extends Component {
           <Button onClick={this.toggleRtl}>切换 rtl</Button>
           <Row>
             <Col md={6}>
-              <Nav width={150} showOrderNumber={false} rtl={this.state.rtl} />
+              <Nav
+                width={150}
+                showOrderNumber={false}
+                rtl={this.state.rtl}
+                // offset={{
+                //   [this.state.rtl ? 'left' : 'right']: 10,
+                //   top: 50
+                // }}
+                scrollBar="left"
+              />
               {/* <Nav>
                 <Nav.Item title="Title" />
                 <Nav.Item title="Title2" />

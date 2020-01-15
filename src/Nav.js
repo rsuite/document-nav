@@ -64,11 +64,16 @@ class Component extends React.PureComponent<Props, State> {
     this.state = {
       anchors: []
     };
+    this.reload = throttle((content = this.props.content, rtl = this.props.rtl) => {
+      this.handelContentMount(content, rtl);
+    }, 200);
+    this.reload();
   }
   scrollListener: ?any;
   resizeListener: ?any;
   scrollWrap: ?HTMLElement;
   pageNav: ?HTMLElement;
+  prevInnerHTML: ?string;
 
   getContext() {
     const { scrollBar, fixed, showOrderNumber } = this.props;
@@ -82,13 +87,22 @@ class Component extends React.PureComponent<Props, State> {
   componentWillUpdate(nextProps: Props, nextState: State) {
     const { once, rtl } = this.props;
     if (rtl !== nextProps.rtl) {
-      this.handelContentMount(nextProps.content, nextProps.rtl);
+      this.reload(nextProps.content, nextProps.rtl);
       return;
     }
     if (once && !this.props.content && nextProps.content) {
       this.handelContentMount(nextProps.content, nextProps.rtl);
-    } else if (!once && this.props.content !== nextProps.content) {
-      this.handelContentMount(nextProps.content, nextProps.rtl);
+      return;
+    }
+    if (!once) {
+      if (this.props.content !== nextProps.content) {
+        this.reload(nextProps.content, nextProps.rtl);
+        return;
+      }
+      if (nextProps.content && this.prevInnerHTML !== nextProps.content.innerHTML) {
+        this.reload(nextProps.content, nextProps.rtl);
+        return;
+      }
     }
   }
   componentWillUnmount() {
@@ -187,6 +201,9 @@ class Component extends React.PureComponent<Props, State> {
   }
 
   handelContentMount(content: HTMLElement, rtl) {
+    if (content) {
+      this.prevInnerHTML = content.innerHTML;
+    }
     const titleList: TitleList = [];
     const anchors: Array<string> = [];
     const { children, minLevel, maxLevel, fixed } = this.props;
