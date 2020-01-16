@@ -49,6 +49,7 @@ class Component extends React.PureComponent<Props, State> {
     },
     minLevel: 2,
     maxLevel: 4,
+    deep: 10,
     scrollBar: 'right',
     show: true,
     fixed: true,
@@ -73,7 +74,7 @@ class Component extends React.PureComponent<Props, State> {
   resizeListener: ?any;
   scrollWrap: ?HTMLElement;
   pageNav: ?HTMLElement;
-  prevInnerHTML: ?string;
+  prevInnerHTML: ?string; // 兼容没有 MutationObserver 的浏览器
 
   getContext() {
     const { scrollBar, fixed, showOrderNumber } = this.props;
@@ -94,7 +95,9 @@ class Component extends React.PureComponent<Props, State> {
       this.handelContentMount(nextProps.content, nextProps.rtl);
       return;
     }
-    if (!once) {
+    // 无 MutationObserver 时使用传统判断
+    if (!once && !window.MutationObserver) {
+      // 这里的 content 引用值理论上是不会变的，其实不需要这个判断，暂且先留着吧
       if (this.props.content !== nextProps.content) {
         this.reload(nextProps.content, nextProps.rtl);
         return;
@@ -147,12 +150,12 @@ class Component extends React.PureComponent<Props, State> {
         }
       }
     }, 300);
-    window.addEventListener('scroll',this.scrollListener);
+    window.addEventListener('scroll', this.scrollListener);
   }
 
   // 遍历所有标题
-  traverseTitle(node: HTMLElement, titleList: TitleList, anchors: Array<string>) {
-    if (!node || !titleList || !anchors) {
+  traverseTitle(node: HTMLElement, titleList: TitleList, anchors: Array<string>, deep) {
+    if (!node || !titleList || !anchors || deep > this.props.deep) {
       return false;
     }
     const type = node.tagName;
@@ -173,7 +176,7 @@ class Component extends React.PureComponent<Props, State> {
     } else {
       const { children } = node;
       for (let i = 0; i < children.length; i += 1) {
-        this.traverseTitle(children[i], titleList, anchors);
+        this.traverseTitle(children[i], titleList, anchors, deep + 1);
       }
     }
   }
@@ -202,13 +205,26 @@ class Component extends React.PureComponent<Props, State> {
 
   handelContentMount(content: HTMLElement, rtl) {
     if (content) {
-      this.prevInnerHTML = content.innerHTML;
+      if (window.MutationObserver) {
+        this.observe = new MutationObserver(() => {
+          if (!this.props.once) {
+            this.reload(this.props.content, this.props.rtl);
+          }
+        });
+        const config = {
+          childList: true,
+          subtree: true
+        };
+        this.observe.observe(content, config);
+      } else {
+        this.prevInnerHTML = content.innerHTML;
+      }
     }
     const titleList: TitleList = [];
     const anchors: Array<string> = [];
     const { children, minLevel, maxLevel, fixed } = this.props;
     if (!children) {
-      this.traverseTitle(content, titleList, anchors);
+      this.traverseTitle(content, titleList, anchors, 0);
       this.setState({
         anchors
       });

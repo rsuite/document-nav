@@ -126,6 +126,7 @@ function render() {
 | showOrderNumber | boolean `(true)`                   | 是否显示标题前的序号                                                                                   |
 | once            | boolean `(true)`                   | 只解析一次文档？设为`true`则只会解析一次，文档发生变化时不会重新解析，性能较好。                       |
 | rtl             | boolean `(false)`                  | 文档从右侧开始阅读                                                                                     |
+| deep            | number `(10)`                       | 解析的 DOM 深度，避免和标题无关的 DOM 层级过深导致的性能损耗                                           |
 
 ### `<Nav.Item>`
 
