@@ -117,7 +117,7 @@ class Component extends React.PureComponent<Props, State> {
     if (this.scrollListener) {
       window.removeEventListener('scroll', this.scrollListener);
     }
-    this.scrollListener = () => {
+    this.scrollListener = throttle(() => {
       let index = 0;
       const { activeAnchor } = this.state;
       elList.find((el, i) => {
@@ -146,8 +146,8 @@ class Component extends React.PureComponent<Props, State> {
           }
         }
       }
-    };
-    window.addEventListener('scroll', throttle(this.scrollListener, 300));
+    }, 300);
+    window.addEventListener('scroll',this.scrollListener);
   }
 
   // 遍历所有标题

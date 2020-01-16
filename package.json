@@ -1,6 +1,6 @@
 {
   "name": "@rsuite/document-nav",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Document navigation is automatically generated based on the HTML title (h1-h6) tag",
   "main": "lib/index.js",
   "directories": {
@@ -42,6 +42,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/rsuite/document-nav"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "rsuite",
