@@ -22,7 +22,7 @@ const Content = () => {
           .map(getRow)
       );
     }, 5000);
-    const timer = setInterval(() => setTableData(prev => [...prev, getRow]), 2000);
+    // const timer = setInterval(() => setTableData(prev => [...prev, getRow]), 2000);
     return () => clearInterval(timer);
   }, []);
 

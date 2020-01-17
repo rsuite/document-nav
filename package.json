@@ -1,6 +1,6 @@
 {
   "name": "@rsuite/document-nav",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Document navigation is automatically generated based on the HTML title (h1-h6) tag",
   "main": "lib/index.js",
   "directories": {

@@ -1,24 +1,15 @@
 // @flow
 import * as React from 'react';
-import NavContext from './NavContext';
+import classnames from 'classnames';
 
 type Props = {
   children: React.Node
 };
 
-class Content extends React.PureComponent<Props> {
-  render() {
-    const { children, ...props } = this.props;
-    return (
-      <NavContext.Consumer>
-        {context => (
-          <div ref={ref => context.setContent(ref)} {...props}>
-            {children}
-          </div>
-        )}
-      </NavContext.Consumer>
-    );
-  }
-}
+const Content = ({ children, className, ...props }) => (
+  <div {...props} className={classnames('rs-document-nav-content', className)}>
+    {children}
+  </div>
+);
 
 export default Content;

@@ -41,7 +41,7 @@ type TitleList = Array<{
   level: number
 }>;
 
-class Component extends React.PureComponent<Props, State> {
+class Nav extends React.PureComponent<Props, State> {
   static defaultProps = {
     offset: {
       top: 60,
@@ -65,10 +65,12 @@ class Component extends React.PureComponent<Props, State> {
     this.state = {
       anchors: []
     };
-    this.reload = throttle((content = this.props.content, rtl = this.props.rtl) => {
-      this.handelContentMount(content, rtl);
+    this.reload = throttle(() => {
+      if (typeof document === 'undefined') {
+        return;
+      }
+      this.handelContentMount(document.querySelector('.rs-document-nav-content'), this.props.rtl);
     }, 200);
-    this.reload();
   }
   scrollListener: ?any;
   resizeListener: ?any;
@@ -85,36 +87,51 @@ class Component extends React.PureComponent<Props, State> {
       showOrderNumber
     };
   }
-  componentWillUpdate(nextProps: Props, nextState: State) {
+
+  componentDidMount() {
+    this.reload();
+  }
+
+  componentDidUpdate(nextProps: Props, nextState: State) {
     const { once, rtl } = this.props;
     if (rtl !== nextProps.rtl) {
-      this.reload(nextProps.content, nextProps.rtl);
+      this.reload();
       return;
     }
     if (once && !this.props.content && nextProps.content) {
-      this.handelContentMount(nextProps.content, nextProps.rtl);
+      this.reload();
+      return;
+    }
+    if (typeof window === 'undefined') {
       return;
     }
     // 无 MutationObserver 时使用传统判断
+
     if (!once && !window.MutationObserver) {
       // 这里的 content 引用值理论上是不会变的，其实不需要这个判断，暂且先留着吧
       if (this.props.content !== nextProps.content) {
-        this.reload(nextProps.content, nextProps.rtl);
+        this.reload();
         return;
       }
       if (nextProps.content && this.prevInnerHTML !== nextProps.content.innerHTML) {
-        this.reload(nextProps.content, nextProps.rtl);
+        this.reload();
         return;
       }
     }
   }
   componentWillUnmount() {
+    if (typeof window === 'undefined') {
+      return;
+    }
     window.removeEventListener('scroll', this.scrollListener);
     window.removeEventListener('resize', this.resizeListener);
     this.pageNav = null;
   }
 
   setScrollListener(ref: HTMLElement, anchors: Array<string>) {
+    if (typeof window === 'undefined') {
+      return;
+    }
     this.scrollWrap = ref;
     const elList = anchors.map(anchor => document.getElementById(anchor));
     if (this.scrollListener) {
@@ -204,11 +221,14 @@ class Component extends React.PureComponent<Props, State> {
   }
 
   handelContentMount(content: HTMLElement, rtl) {
+    if (typeof window === 'undefined') {
+      return;
+    }
     if (content) {
       if (window.MutationObserver) {
         this.observe = new MutationObserver(() => {
           if (!this.props.once) {
-            this.reload(this.props.content, this.props.rtl);
+            this.reload();
           }
         });
         const config = {
@@ -288,10 +308,5 @@ class Component extends React.PureComponent<Props, State> {
   }
 }
 
-const Nav = props => (
-  <NavContext.Consumer>{context => <Component {...props} {...context} />}</NavContext.Consumer>
-);
-
-Nav.Item = NavItem;
 
 export default Nav;

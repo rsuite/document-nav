@@ -34,6 +34,7 @@ class App extends Component {
                 // }}
                 scrollBar="left"
                 deep={3}
+                once={false}
               />
               {/* <Nav>
                 <Nav.Item title="Title" />
