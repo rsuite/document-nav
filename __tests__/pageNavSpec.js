@@ -9,13 +9,12 @@ Enzyme.configure({ adapter: new Adapter() });
 describe('Nav test with auto', () => {
   const wrapper = mount(
     <div>
-      <NavProvider>
-        <Nav />
-        <Content>
-          <h2 id="h2-2">二级标题</h2>
-        </Content>
-      </NavProvider>
-    </div>
+      <Nav />
+      <Content>
+        <h2 id="h2-2">二级标题</h2>
+      </Content>
+    </div>,
+    { attachTo: document.body }
   );
 
   const instance = findDOMNode(wrapper.instance());

@@ -11,21 +11,19 @@ npm i @rsuite/document-nav --save
 ## Examples
 
 ```js
-import { NavProvider, Content, Nav } from '@rsuite/document-nav';
+import { Content, Nav } from '@rsuite/document-nav';
 import '@rsuite/document-nav/lib/less/index.less';
 
 function render() {
   return (
-    <NavProvider>
-      <div className="row">
-        <div className="col col-md-4">
-          <Nav />
-        </div>
-        <div className="col col-md-20">
-          <Content>{require('redeme.md')}</Content>
-        </div>
+    <div className="row">
+      <div className="col col-md-4">
+        <Nav />
       </div>
-    </NavProvider>
+      <div className="col col-md-20">
+        <Content>{require('redeme.md')}</Content>
+      </div>
+    </div>
   );
 }
 ```
@@ -45,39 +43,37 @@ function render() {
 
 只需按照如下结构组合代码，document-nav 会自动从 `Content` 中解析出所有的 `h` 标签，并生成导航菜单。
 
-`NavProvider` 负责 `Content` 与 `Nav` 的协作，需放在外层，中间可以任意布局。
-
 ```
-<NavProvider>
   <Nav />
   <Content>
     ...content
   </Content>
-</NavProvider>
 ```
 
 可以使用 `minLevel` 和 `maxLevel` 来限制导航的标题级别，如 `minLevel = 2` 且 `maxLevel = 4` 时，只有 `h2, h3, h4` 会被导航。
+
+`once` 设置为文档只解析一次，用于文章结构不会改变的情况，避免比较解析造成的性能损耗。
+
+`deep` 设置为最大解析深度，通常标题所在的层级不会太深，如果文档 DOM 很复杂同时解析层级过深的话会大大影响性能。
 
 **注意**
 
 该方法使用标题作为锚点 ID，请尽量避免标题名称重复。
 
 ```js
-import { NavProvider, Content, Nav } from '@rsuite/document-nav';
+import { Content, Nav } from '@rsuite/document-nav';
 import '@rsuite/document-nav/lib/less/index.less';
 
 function render() {
   return (
-    <NavProvider>
-      <div className="row">
-        <div className="col col-md-4">
-          <Nav />
-        </div>
-        <div className="col col-md-20">
-          <Content>{require('redeme.md')}</Content>
-        </div>
+    <div className="row">
+      <div className="col col-md-4">
+        <Nav />
       </div>
-    </NavProvider>
+      <div className="col col-md-20">
+        <Content>{require('redeme.md')}</Content>
+      </div>
+    </div>
   );
 }
 ```
@@ -87,26 +83,24 @@ function render() {
 在 Nav 组件中通过 NavItem 组件设置导航。
 
 ```js
-import { NavProvider, Content, Nav } from '@rsuite/document-nav';
+import { Content, Nav } from '@rsuite/document-nav';
 import '@rsuite/document-nav/lib/less/index.less';
 
 function render() {
   return (
-    <NavProvider>
-      <div className="row">
-        <div className="col col-md-4">
-          <Nav>
-            <Nav.Item anchor="h-3" title="二级标题---2">
-                <Nav.Item anchor="h-3-1" title="三级标题">
-              </Nav.Item>
-              <Nav.Item anchor="h-4" title="二级标题---3" />
-          </Nav>
-        </div>
-        <div className="col col-md-20">
-          <Content>{require('redeme.md')}</Content>
-        </div>
+    <div className="row">
+      <div className="col col-md-4">
+        <Nav>
+          <Nav.Item anchor="h-3" title="二级标题---2">
+              <Nav.Item anchor="h-3-1" title="三级标题">
+            </Nav.Item>
+            <Nav.Item anchor="h-4" title="二级标题---3" />
+        </Nav>
       </div>
-    </NavProvider>
+      <div className="col col-md-20">
+        <Content>{require('redeme.md')}</Content>
+      </div>
+    </div>
   );
 }
 ```
@@ -126,7 +120,7 @@ function render() {
 | showOrderNumber | boolean `(true)`                   | 是否显示标题前的序号                                                                                   |
 | once            | boolean `(true)`                   | 只解析一次文档？设为`true`则只会解析一次，文档发生变化时不会重新解析，性能较好。                       |
 | rtl             | boolean `(false)`                  | 文档从右侧开始阅读                                                                                     |
-| deep            | number `(10)`                       | 解析的 DOM 深度，避免和标题无关的 DOM 层级过深导致的性能损耗                                           |
+| deep            | number `(10)`                      | 解析的 DOM 深度，避免和标题无关的 DOM 层级过深导致的性能损耗                                           |
 
 ### `<Nav.Item>`
 

@@ -9,17 +9,15 @@ Enzyme.configure({ adapter: new Adapter() });
 describe('Nav.Item', () => {
   const wrapper = mount(
     <div>
-      <NavProvider>
-        <Nav>
-          <NavItem title="一级标题" anchor="h1">
-            <NavItem title="二级标题" anchor="h1-1" />
-          </NavItem>
-        </Nav>
-        <Content>
-          <h1 id="h1">一级标题</h1>
-          <h2 id="h1-1">二级标题</h2>
-        </Content>
-      </NavProvider>
+      <Nav>
+        <NavItem title="一级标题" anchor="h1">
+          <NavItem title="二级标题" anchor="h1-1" />
+        </NavItem>
+      </Nav>
+      <Content>
+        <h1 id="h1">一级标题</h1>
+        <h2 id="h1-1">二级标题</h2>
+      </Content>
     </div>
   );
 
@@ -34,17 +32,15 @@ describe('Nav.Item', () => {
 describe('Nav.Item rtl', () => {
   const wrapper = mount(
     <div>
-      <NavProvider>
-        <Nav rtl>
-          <NavItem title="一级标题" anchor="h1">
-            <NavItem title="二级标题" anchor="h1-1" />
-          </NavItem>
-        </Nav>
-        <Content>
-          <h1 id="h1">一级标题</h1>
-          <h2 id="h1-1">二级标题</h2>
-        </Content>
-      </NavProvider>
+      <Nav rtl>
+        <NavItem title="一级标题" anchor="h1">
+          <NavItem title="二级标题" anchor="h1-1" />
+        </NavItem>
+      </Nav>
+      <Content>
+        <h1 id="h1">一级标题</h1>
+        <h2 id="h1-1">二级标题</h2>
+      </Content>
     </div>
   );
 
