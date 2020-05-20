@@ -89,6 +89,7 @@ class Nav extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
+    console.log(typeof window, typeof document)
     this.reload();
   }
 
@@ -191,7 +192,7 @@ class Nav extends React.PureComponent<Props, State> {
         anchors.push(title);
       }
     } else {
-      const { children } = node;
+      const children = node.children || [];
       for (let i = 0; i < children.length; i += 1) {
         this.traverseTitle(children[i], titleList, anchors, deep + 1);
       }
