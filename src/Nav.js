@@ -89,7 +89,6 @@ class Nav extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    console.log(typeof window, typeof document)
     this.reload();
   }
 
