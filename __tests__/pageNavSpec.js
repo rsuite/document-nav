@@ -24,11 +24,9 @@ describe('Nav test with auto', () => {
   });
 
   it('href == id', () => {
-    const href = instance
-      .querySelector('.nav-link')
-      .getAttribute('href')
-      .replace('#', '');
+    const href = instance.querySelector('.nav-link').getAttribute('href').replace('#', '');
     const id = instance.querySelector('h2').id;
     expect(href === id).toEqual(true);
+    expect(id).toBe('h2-2');
   });
 });

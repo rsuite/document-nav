@@ -178,17 +178,18 @@ class Nav extends React.PureComponent<Props, State> {
     const type = node.tagName;
     if (/^H[1-6]/.test(type)) {
       const title = node.innerText || '';
-      node.id = title;
+      const anchor = node.id || title;
+      node.id = anchor;
 
       let level = parseInt(type.replace('H', ''), 10);
       const { minLevel, maxLevel } = this.props;
       if (level >= minLevel && level <= maxLevel) {
         titleList.push({
           title,
-          anchor: title,
+          anchor,
           level
         });
-        anchors.push(title);
+        anchors.push(anchor);
       }
     } else {
       const children = node.children || [];
