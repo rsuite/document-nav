@@ -34,6 +34,7 @@
     "prepages": "npm run docs",
     "pages": "node docs/gh-pages.js",
     "predeploy": "npm run build",
+    "prepublish": "npm run build",
     "release": "npm publish",
     "test": "jest && codecov",
     "coverage": "jest --colors --coverage",

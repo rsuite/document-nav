@@ -7,6 +7,7 @@ import NavItem from './NavItem';
 import { itemHeight } from './constants';
 import throttle from './utils/throttle';
 import NavContext, { NavItemContext } from './NavContext';
+import getInnerText from './utils/innerText';
 
 type Props = {
   offset: {
@@ -177,7 +178,7 @@ class Nav extends React.PureComponent<Props, State> {
     }
     const type = node.tagName;
     if (/^H[1-6]/.test(type)) {
-      const title = node.innerText || '';
+      const title = getInnerText(node) || '';
       const anchor = node.id || title;
       node.id = anchor;
 
@@ -276,8 +277,10 @@ class Nav extends React.PureComponent<Props, State> {
     const resizeListener = () => {
       const pageNav = this.pageNav;
       if (pageNav) {
-        pageNav.style.height = `${itemHeight *
-          parseInt((window.innerHeight - (offset.top || offset.bottom) - 60) / itemHeight, 10)}px`;
+        pageNav.style.height = `${
+          itemHeight *
+          parseInt((window.innerHeight - (offset.top || offset.bottom) - 60) / itemHeight, 10)
+        }px`;
       }
     };
 
@@ -308,6 +311,5 @@ class Nav extends React.PureComponent<Props, State> {
     );
   }
 }
-
 
 export default Nav;
