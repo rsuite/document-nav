@@ -50,8 +50,9 @@ class NavItem extends React.PureComponent<Props, State> {
     const { title, anchor, subItems, children, index, level, rtl } = this.props;
     const { scrollBar = 'right', activeAnchor, showOrderNumber } = this.props;
     const active = anchor === activeAnchor;
+    const content = showOrderNumber ? `${index} ${title}` : title;
     return (
-      <div className="nav-item">
+      <div className="nav-item" title={content}>
         <a
           href={`#${anchor}`}
           className={`nav-link ${active ? 'active' : ''} scroll-bar-${scrollBar}`}
@@ -59,7 +60,7 @@ class NavItem extends React.PureComponent<Props, State> {
             [rtl ? 'paddingRight' : 'paddingLeft']: `${(level - 1) * 20 + BASE_PADDING_LEFT}px`
           }}
         >
-          {showOrderNumber ? `${index} ${title}` : title}
+          {content}
         </a>
         {subItems || children ? (
           <div className="sub-nav-item">{this.renderSubNavItems()}</div>
