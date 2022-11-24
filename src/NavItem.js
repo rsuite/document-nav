@@ -48,13 +48,15 @@ class NavItem extends React.PureComponent<Props, State> {
   }
   render() {
     const { title, anchor, subItems, children, index, level, rtl } = this.props;
-    const { scrollBar = 'right', activeAnchor, showOrderNumber, basePath } = this.props;
+    const { scrollBar = 'right', activeAnchor, showOrderNumber } = this.props;
     const active = anchor === activeAnchor;
     const content = showOrderNumber ? `${index} ${title}` : title;
     return (
       <div className="nav-item" title={content}>
         <a
-          href={`${basePath}#${anchor}`}
+          onClick={() => {
+            document.getElementById(anchor).scrollIntoView();
+          }}
           className={`nav-link ${active ? 'active' : ''} scroll-bar-${scrollBar}`}
           style={{
             [rtl ? 'paddingRight' : 'paddingLeft']: `${(level - 1) * 20 + BASE_PADDING_LEFT}px`
