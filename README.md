@@ -121,6 +121,7 @@ function render() {
 | once            | boolean `(true)`                   | 只解析一次文档？设为`true`则只会解析一次，文档发生变化时不会重新解析，性能较好。                       |
 | rtl             | boolean `(false)`                  | 文档从右侧开始阅读                                                                                     |
 | deep            | number `(10)`                      | 解析的 DOM 深度，避免和标题无关的 DOM 层级过深导致的性能损耗                                           |
+| basePath        | string`('')`                       | 通过传入 basePath，来支持使用了 base 标签 的场景                                                       |
 
 ### `<Nav.Item>`
 
