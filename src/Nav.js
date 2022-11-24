@@ -27,7 +27,9 @@ type Props = {
   scrollBar: string,
   activeAnchor: string,
   showOrderNumber: boolean,
-  rtl: boolean
+  rtl: boolean,
+  /** 通过传入 basePath 来支持使用 base 标签的场景 */
+  basePath: string
 };
 
 type State = {
@@ -56,7 +58,8 @@ class Nav extends React.PureComponent<Props, State> {
     fixed: true,
     showOrderNumber: true,
     once: true,
-    rtl: false
+    rtl: false,
+    basePath: ''
   };
 
   static Item = NavItem;
@@ -80,12 +83,13 @@ class Nav extends React.PureComponent<Props, State> {
   prevInnerHTML: ?string; // 兼容没有 MutationObserver 的浏览器
 
   getContext() {
-    const { scrollBar, fixed, showOrderNumber } = this.props;
+    const { scrollBar, fixed, showOrderNumber, basePath } = this.props;
     const { anchors, activeAnchor = fixed ? anchors[0] : '' } = this.state;
     return {
       scrollBar,
       activeAnchor,
-      showOrderNumber
+      showOrderNumber,
+      basePath
     };
   }
 
