@@ -232,16 +232,18 @@ class Nav extends React.PureComponent<Props, State> {
     }
     if (content) {
       if (window.MutationObserver) {
-        this.observe = new MutationObserver(() => {
-          if (!this.props.once) {
-            this.reload();
-          }
-        });
-        const config = {
-          childList: true,
-          subtree: true
-        };
-        this.observe.observe(content, config);
+        if (!this.observe) {
+          this.observe = new MutationObserver(() => {
+            if (!this.props.once) {
+              this.reload();
+            }
+          });
+          const config = {
+            childList: true,
+            subtree: true
+          };
+          this.observe.observe(content, config);
+        }
       } else {
         this.prevInnerHTML = content.innerHTML;
       }
