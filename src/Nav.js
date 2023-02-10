@@ -232,16 +232,18 @@ class Nav extends React.PureComponent<Props, State> {
     }
     if (content) {
       if (window.MutationObserver) {
-        this.observe = new MutationObserver(() => {
-          if (!this.props.once) {
-            this.reload();
-          }
-        });
-        const config = {
-          childList: true,
-          subtree: true
-        };
-        this.observe.observe(content, config);
+        if (!this.observe) {
+          this.observe = new MutationObserver(() => {
+            if (!this.props.once) {
+              this.reload();
+            }
+          });
+          const config = {
+            childList: true,
+            subtree: true
+          };
+          this.observe.observe(content, config);
+        }
       } else {
         this.prevInnerHTML = content.innerHTML;
       }
@@ -281,10 +283,8 @@ class Nav extends React.PureComponent<Props, State> {
     const resizeListener = () => {
       const pageNav = this.pageNav;
       if (pageNav) {
-        pageNav.style.height = `${
-          itemHeight *
-          parseInt((window.innerHeight - (offset.top || offset.bottom) - 60) / itemHeight, 10)
-        }px`;
+        pageNav.style.height = `${itemHeight *
+          parseInt((window.innerHeight - (offset.top || offset.bottom) - 60) / itemHeight, 10)}px`;
       }
     };
 
