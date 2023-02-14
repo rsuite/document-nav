@@ -143,6 +143,7 @@ class Nav extends React.PureComponent<Props, State> {
       window.removeEventListener('scroll', this.scrollListener);
     }
     this.scrollListener = throttle(() => {
+      const { basePath } = this.props;
       let index = 0;
       const { activeAnchor } = this.state;
       elList.find((el, i) => {
@@ -151,14 +152,17 @@ class Nav extends React.PureComponent<Props, State> {
         }
         const position = el.getBoundingClientRect();
         index = i;
-        return position.top > 0;
+        // 在 windows 电脑中点击锚点跳转后定位的元素，它的 position.top 不是 0，而是一个大于 0 小于 1 的数，所有需要减去 1，来兼容这种情况
+        // 而在 mac 电脑中这个值为 0，0 本来就不大于 0，所以即使减去 1 也对原有的逻辑没有影响，实际情况中也不会存在锚点行高为 1 的元素
+        return position.top - 1 > 0;
       });
+      // 第一个 position.top 大于 0 的元素，它的上一个元素便是需要被激活的导航
       const nextAnchor = anchors[index - 1] || anchors[0];
       if (nextAnchor !== activeAnchor && this.pageNav) {
         this.setState({
           activeAnchor: nextAnchor
         });
-        const nav = document.querySelector(`a[href='#${nextAnchor}']`);
+        const nav = document.querySelector(`a[href='${basePath}#${nextAnchor}']`);
         const pageNav = this.pageNav;
         if (nav && pageNav) {
           const navTop = nav.getBoundingClientRect().top - pageNav.getBoundingClientRect().top;
@@ -281,10 +285,8 @@ class Nav extends React.PureComponent<Props, State> {
     const resizeListener = () => {
       const pageNav = this.pageNav;
       if (pageNav) {
-        pageNav.style.height = `${
-          itemHeight *
-          parseInt((window.innerHeight - (offset.top || offset.bottom) - 60) / itemHeight, 10)
-        }px`;
+        pageNav.style.height = `${itemHeight *
+          parseInt((window.innerHeight - (offset.top || offset.bottom) - 60) / itemHeight, 10)}px`;
       }
     };
 
