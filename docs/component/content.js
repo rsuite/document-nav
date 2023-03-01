@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Markdown } from 'markdownloader';
 import { Table } from 'rsuite';
 
+function scrollIntoView() {
+  if (location.hash) {
+    try {
+      document.querySelector(decodeURIComponent(location.hash)).scrollIntoView();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
 const Content = () => {
   const [showDemo, toggleShow] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -25,6 +35,10 @@ const Content = () => {
     // const timer = setInterval(() => setTableData(prev => [...prev, getRow]), 2000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    scrollIntoView();
+  });
 
   return (
     <div
