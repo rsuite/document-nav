@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Markdown } from 'markdownloader';
 import { Table } from 'rsuite';
 
+function scrollIntoView() {
+  if (location.hash) {
+    try {
+      document.querySelector(decodeURIComponent(location.hash)).scrollIntoView();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
 const Content = () => {
   const [showDemo, toggleShow] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -26,6 +36,10 @@ const Content = () => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    scrollIntoView();
+  });
+
   return (
     <div
       style={{
@@ -45,7 +59,7 @@ const Content = () => {
         </div>
       </div>
       <h2>通过设置 deep 参数，使复杂的 DOM 树不会影响性能</h2>
-      <div>
+      <div style={{ height: 1000 }}>
         <Table
           data={tableData}
           locale={{

@@ -144,20 +144,21 @@ class Nav extends React.PureComponent<Props, State> {
     }
     this.scrollListener = throttle(() => {
       const { basePath } = this.props;
-      let index = 0;
       const { activeAnchor } = this.state;
-      elList.find((el, i) => {
+      const index = elList.findIndex((el, i) => {
         if (!el) {
           return false;
         }
         const position = el.getBoundingClientRect();
-        index = i;
         // 在 windows 电脑中点击锚点跳转后定位的元素，它的 position.top 不是 0，而是一个大于 0 小于 1 的数，所有需要减去 1，来兼容这种情况
-        // 而在 mac 电脑中这个值为 0，0 本来就不大于 0，所以即使减去 1 也对原有的逻辑没有影响，实际情况中也不会存在锚点行高为 1 的元素
+        // 而在 mac 电脑中这个值为 0，0 本来就不大于 0，所以即使减去 1 也对原有的逻辑没有影响，原有逻辑不减 1
+        // 实际情况中也不会存在锚点高度为 1且与下个锚点没有间隙的锚点
         return position.top - 1 > 0;
       });
-      // 第一个 position.top 大于 0 的元素，它的上一个元素便是需要被激活的导航
-      const nextAnchor = anchors[index - 1] || anchors[0];
+      // 第一个 position.top 大于 0 的元素且它的索引大于 0，它的上一个元素便是需要被激活的导航，
+      // 当找到节点的索引为 0 时，直接取该索引，当找不到时，说明所有锚点都在窗口上方，直接取最后一个锚点
+      const nextAnchor =
+        index > 0 ? anchors[index - 1] : index === 0 ? anchors[0] : anchors[anchors.length - 1];
       if (nextAnchor !== activeAnchor && this.pageNav) {
         this.setState({
           activeAnchor: nextAnchor
